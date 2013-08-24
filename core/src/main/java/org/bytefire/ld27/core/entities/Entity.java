@@ -8,6 +8,9 @@ import org.bytefire.ld27.core.LD27;
 
 public abstract class Entity extends Image{
     
+    protected static final float GRAVITATIONAL_ACCELERATION = 128F;
+    protected static final float MAX_GRAVITY = 256F;
+    
     protected final LD27 game;
     
     protected final Vector2 position;
@@ -30,8 +33,12 @@ public abstract class Entity extends Image{
     public void act(float delta){
         super.act(delta);
         
+        float gravity = velocity.y - GRAVITATIONAL_ACCELERATION;
+        if (gravity >= -MAX_GRAVITY) velocity.y = gravity;
+        
         float newx = position.x + (velocity.x * delta);
         float newy = position.y + (velocity.y * delta);
+        
         
         if (newx > 0 - getWidth() && newx < Gdx.graphics.getWidth() + getWidth()) position.x = newx;
         else remove();

@@ -8,8 +8,9 @@ import org.bytefire.ld27.core.screen.AbstractScreen;
 import static com.badlogic.gdx.Input.Keys.*;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import org.bytefire.ld27.core.asset.Tex;
+import static org.bytefire.ld27.core.entities.Entity.GRAVITATIONAL_ACCELERATION;
 
-public class Player extends Entity{
+public class Player extends Entity {
     
     private static final float MAX_VELOCITY = 256F;
     private static final float POWER = 64F;
@@ -36,6 +37,9 @@ public class Player extends Entity{
         
         calcVelocity(delta);
         calcAngle(delta);
+        
+        float gravity = velocity.y - GRAVITATIONAL_ACCELERATION;
+        if (gravity >= -MAX_GRAVITY) velocity.y = gravity;
         
         float newx = position.x + (velocity.x * delta);
         float newy = position.y + (velocity.y * delta);

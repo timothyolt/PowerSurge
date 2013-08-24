@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import org.bytefire.ld27.core.LD27;
+import org.bytefire.ld27.core.screen.AbstractScreen;
 
 public abstract class Entity extends Image{
 
@@ -40,9 +41,9 @@ public abstract class Entity extends Image{
         float newy = position.y + (velocity.y * delta);
 
 
-        if (newx < 0 || newx > Gdx.graphics.getWidth()) remove();
-        if (newy > Gdx.graphics.getHeight()) remove();
-        else if (newy < 100) newy = 100;
+        if (newx < 0 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth()) remove();
+        if (newy > ((AbstractScreen) game.getScreen()).getStage().getHeight()) remove();
+        else if (newy < 128) newy = 128;
         position.x = newx;
         position.y = newy;
 

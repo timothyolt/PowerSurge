@@ -8,7 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import org.bytefire.ld27.core.asset.Tex;
 
 import static com.badlogic.gdx.Input.Keys.*;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import static org.bytefire.ld27.core.entities.Entity.GRAVITATIONAL_ACCELERATION;
+import org.bytefire.ld27.core.screen.GameScreen;
 
 public class Player extends Entity {
 
@@ -44,11 +46,16 @@ public class Player extends Entity {
         float newx = position.x + (velocity.x * delta);
         float newy = position.y + (velocity.y * delta);
 
-        if (newx < 0 || newx > Gdx.graphics.getWidth()) velocity.x *= -2;
-        if (newy > Gdx.graphics.getHeight()) velocity.y *= -2;
-        else if (newy < 100) newy = 100;
+        if (newx < 0 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth()) velocity.x *= -2;
+        if (newy > ((AbstractScreen) game.getScreen()).getStage().getHeight()) velocity.y *= -2;
+        else if (newy < 128) {
+            if (velocity.y < 0) velocity.y = 0;
+            newy = 128;
+        }
         position.x = newx;
         position.y = newy;
+
+        ((GameScreen) game.getScreen()).centerCamera(position.x, position.y);
 
         setX(position.x);
         setY(position.y);
@@ -68,13 +75,7 @@ public class Player extends Entity {
             if (velocity.x > FRICTION) velocity.x -= FRICTION;
             else velocity.x = 0;
         if (Gdx.input.isKeyPressed(DOWN) && velocity.y > -MAX_VELOCITY) velocity.y -= POWER;
-        else if (velocity.y < 0)
-            if (velocity.y < FRICTION) velocity.y += FRICTION;
-            else velocity.y = 0;
-        if (Gdx.input.isKeyPressed(UP) && velocity.y < MAX_VELOCITY)  velocity.y += POWER;
-        else if (velocity.y > 0)
-            if (velocity.y > - FRICTION) velocity.y -= FRICTION;
-            else velocity.y = 0;
+        if (Gdx.input.isKeyPressed(UP) && velocity.y < MAX_VELOCITY)  velocity.y += POWER * 2;
     }
 
     public void calcAngle(float delta){

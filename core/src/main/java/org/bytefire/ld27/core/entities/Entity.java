@@ -1,16 +1,16 @@
 package org.bytefire.ld27.core.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import org.bytefire.ld27.core.LD27;
+import org.bytefire.ld27.core.asset.Tex;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 
 public abstract class Entity extends Image{
 
     protected static final float GRAVITATIONAL_ACCELERATION = 128F;
-    protected static final float MAX_GRAVITY = 256F;
+    protected static final float MAX_GRAVITY = 1024F;
 
     protected final LD27 game;
 
@@ -43,7 +43,7 @@ public abstract class Entity extends Image{
 
         if (newx < 0 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth()) remove();
         if (newy > ((AbstractScreen) game.getScreen()).getStage().getHeight()) remove();
-        else if (newy < 128) newy = 128;
+        else if (newy < Tex.MOON.height) newy = Tex.MOON.height;
         position.x = newx;
         position.y = newy;
 

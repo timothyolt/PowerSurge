@@ -3,22 +3,16 @@ package org.bytefire.ld27.core.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.bytefire.ld27.core.LD27;
 
 public abstract class AbstractScreen implements Screen{
 
     protected final LD27 game;
-    protected final BitmapFont font;
-    protected final SpriteBatch batch;
     protected final Stage stage;
 
     public AbstractScreen(LD27 game){
         this.game = game;
-        this.font = new BitmapFont();
-        this.batch = new SpriteBatch();
         this.stage = new Stage();
     }
 
@@ -49,9 +43,10 @@ public abstract class AbstractScreen implements Screen{
 
     @Override
     public void dispose() {
-        font.dispose();
-        batch.dispose();
         stage.dispose();
     }
-
+    
+    public Stage getStage(){
+        return stage;
+    }
 }

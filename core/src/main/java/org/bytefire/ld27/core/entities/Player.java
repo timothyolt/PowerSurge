@@ -75,7 +75,7 @@ public class Player extends Entity {
             if (velocity.x > FRICTION) velocity.x -= FRICTION;
             else velocity.x = 0;
         if (Gdx.input.isKeyPressed(DOWN) && velocity.y > -MAX_VELOCITY) velocity.y -= POWER;
-        if (Gdx.input.isKeyPressed(UP) && velocity.y < MAX_VELOCITY)  velocity.y += POWER * 2;
+        if (Gdx.input.isKeyPressed(UP) && velocity.y < MAX_VELOCITY)  velocity.y += POWER * 4;
     }
 
     public void calcAngle(float delta){

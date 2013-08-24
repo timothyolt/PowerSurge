@@ -10,7 +10,7 @@ import org.bytefire.ld27.core.screen.AbstractScreen;
 public abstract class Entity extends Image{
 
     protected static final float GRAVITATIONAL_ACCELERATION = 128F;
-    protected static final float MAX_GRAVITY = 256F;
+    protected static final float MAX_GRAVITY = 1024F;
 
     protected final LD27 game;
 

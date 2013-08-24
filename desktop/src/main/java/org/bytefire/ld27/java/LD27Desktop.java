@@ -1,7 +1,7 @@
 package org.bytefire.ld27.java;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;   
 
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.util.XMLConfig;

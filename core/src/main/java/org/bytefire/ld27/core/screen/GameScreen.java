@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.entities.Enemy;
 import org.bytefire.ld27.core.entities.Player;
 
 public class GameScreen extends AbstractScreen {
@@ -43,7 +44,7 @@ public class GameScreen extends AbstractScreen {
         addFloor();
 
         stage.addActor(player);
-        //stage.addActor(new Enemy(100, 100, 0, Shape.RHOMBUS, game));
+        stage.addActor(new Enemy(STAGE_WIDTH/2-150, 100, 0, game));
     }
 
     @Override

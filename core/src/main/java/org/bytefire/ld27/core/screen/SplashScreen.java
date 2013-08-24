@@ -26,7 +26,7 @@ public class SplashScreen extends AbstractScreen {
         drawWidth = (int) stage.getWidth();
         drawHeight = (int) stage.getHeight();
         float ratioRegion = ((float) drawHeight / (float) drawWidth) * 1600;
-
+        
         //casted calculations to int to use the correct constructor
         
         Image splash = new Image(new TextureRegion(game.getTextureHandler().getTexture(Tex.SPLASH), 0, (int) (1500 - ratioRegion), 3200, (int) (1500 + ratioRegion)));

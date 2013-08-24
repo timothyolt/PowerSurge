@@ -31,7 +31,19 @@ public class Shot extends Entity {
     
     @Override
     public void act(float delta){
-        super.act(delta);
+        
+        float newx = position.x + (velocity.x * delta);
+        float newy = position.y + (velocity.y * delta);
+
+
+        if (newx < 0 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth()) remove();
+        if (newy > ((AbstractScreen) game.getScreen()).getStage().getHeight()) remove();
+        else if (newy < 128) newy = 128;
+        position.x = newx;
+        position.y = newy;
+
+        setX(position.x);
+        setY(position.y);
         
         Actor hit = ((AbstractScreen)game.getScreen()).getStage().hit(getX(), getX(), true);
         if (hit != null && hit instanceof Enemy){
@@ -40,5 +52,7 @@ public class Shot extends Entity {
         }
         
         setRotation(angle.x);
+        
+        if(position.y <= 128) remove();
     }
 }

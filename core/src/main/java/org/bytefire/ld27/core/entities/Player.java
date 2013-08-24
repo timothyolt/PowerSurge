@@ -8,7 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import org.bytefire.ld27.core.asset.Tex;
 
 import static com.badlogic.gdx.Input.Keys.*;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import static org.bytefire.ld27.core.entities.Entity.GRAVITATIONAL_ACCELERATION;
 import org.bytefire.ld27.core.screen.GameScreen;
 
@@ -21,22 +22,27 @@ public class Player extends Entity {
     private static final float FIRE_RATE = 0.1F;
 
     private final Vector2 angle;
+    private final TextureRegion tex;
 
     private float shotDelta;
+    private boolean flipped;
 
     public Player(int x, int y, int r, LD27 game){
         super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), game);
+        tex = game.getTextureHandler().getRegion(Tex.PLAYER);
 
         setTouchable(Touchable.enabled);
 
         angle = new Vector2(r, 0);
 
         shotDelta = 0;
+        flipped = false;
     }
 
     @Override
     public void act(float delta){
 
+        
         calcVelocity(delta);
         calcAngle(delta);
 
@@ -61,6 +67,18 @@ public class Player extends Entity {
         setY(position.y);
 
         setRotation(angle.x);
+        
+        if (velocity.x < 0 && !flipped){
+            tex.flip(true, false);
+            setDrawable(new TextureRegionDrawable(tex));
+            flipped = true;
+        }
+        if (velocity.x > 0 && flipped){
+            tex.flip(true, false);
+            setDrawable(new TextureRegionDrawable(tex));
+            flipped = false;
+        }
+        
 
         shotDelta += delta;
     }
@@ -75,7 +93,7 @@ public class Player extends Entity {
             if (velocity.x > FRICTION) velocity.x -= FRICTION;
             else velocity.x = 0;
         if (Gdx.input.isKeyPressed(DOWN) && velocity.y > -MAX_VELOCITY) velocity.y -= POWER;
-        if (Gdx.input.isKeyPressed(UP) && velocity.y < MAX_VELOCITY)  velocity.y += POWER * 2;
+        if (Gdx.input.isKeyPressed(UP) && velocity.y < MAX_VELOCITY)  velocity.y += POWER * 4;
     }
 
     public void calcAngle(float delta){

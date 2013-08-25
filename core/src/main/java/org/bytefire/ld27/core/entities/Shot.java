@@ -45,7 +45,7 @@ public class Shot extends Entity {
         setX(position.x);
         setY(position.y);
         
-        Actor hit = ((AbstractScreen)game.getScreen()).getStage().hit(getX(), getX(), true);
+        Actor hit = ((AbstractScreen)game.getScreen()).getStage().hit(getX(), getY(), true);
         if (hit != null && hit instanceof Enemy){
             hit.remove();
             remove();

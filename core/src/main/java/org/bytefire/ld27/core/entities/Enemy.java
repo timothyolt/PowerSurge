@@ -1,6 +1,7 @@
 package org.bytefire.ld27.core.entities;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -20,7 +21,7 @@ public class Enemy extends Entity{
     private boolean flipped;
     
     public Enemy(int x, int y, int r, LD27 game){
-        super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), game);
+        super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), new Rectangle(23, 4, 17, 28), game);
         tex = game.getTextureHandler().getRegion(Tex.PLAYER);
         
         setTouchable(Touchable.enabled);
@@ -54,7 +55,6 @@ public class Enemy extends Entity{
     public void seek(float delta){
         Player target = ((GameScreen)game.getScreen()).getPlayer();
         float dist = target.position.dst(position);
-        if (dist < 16) game.setScreen(new EndScreen(game));
         velocity.x = (float) (((target.getX() - getX()) / dist) * MAX_VELOCITY);
         velocity.y = (float) (((target.getY() - getY()) / dist) * MAX_VELOCITY);
     }

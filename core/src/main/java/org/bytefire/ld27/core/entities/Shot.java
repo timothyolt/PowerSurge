@@ -11,27 +11,27 @@ import org.bytefire.ld27.core.asset.Tex;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 
 public class Shot extends Entity {
-    
+
     private static final float MAX_VELOCITY = 1024;
-    
+
     private final Vector2 angle;
-    
+
     public Shot(int x, int y, int r, LD27 game){
         super(x, y, game.getTextureHandler().getRegion(Tex.SHOT), game);
-        
+
         setTouchable(Touchable.disabled);
-        
+
         setRotation(r);
-        
+
         velocity.set((float) cos(toRadians(r + 90)) * MAX_VELOCITY, (float) sin(toRadians(r + 90)) * MAX_VELOCITY);
         angle = new Vector2(r, 0);
-        
+
         game.getSfxHandler().play(Sfx.SHOOT);
     }
-    
+
     @Override
     public void act(float delta){
-        
+
         float newx = position.x + (velocity.x * delta);
         float newy = position.y + (velocity.y * delta);
 
@@ -44,18 +44,19 @@ public class Shot extends Entity {
 
         setX(position.x);
         setY(position.y);
-        
+
         Actor hit = ((AbstractScreen)game.getScreen()).getStage().hit(getX(), getY(), true);
-        System.out.println("shot x: " + getX());
-        //System.out.println("y: " + getY());
         if (hit != null && hit instanceof Enemy){
-            System.out.println(((AbstractScreen)game.getScreen()).getStage().hit(getX(), getY(), true));
             hit.remove();
             remove();
         }
-        
+        else if (hit != null && hit instanceof Base){
+            ((Base) hit).takeDamage(5);
+            remove();
+        }
+
         setRotation(angle.x);
-        
+
         if(position.y <= 128) remove();
     }
 }

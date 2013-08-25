@@ -33,10 +33,14 @@ public class Player extends Entity {
     public Player(int x, int y, int r, LD27 game){
         super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), new Rectangle(23, 4, 17, 28), game);
         tex = game.getTextureHandler().getRegion(Tex.PLAYER);
+        if (game.getScreen() instanceof GameScreen){
+            GameScreen screen = ((GameScreen) game.getScreen());
+            screen.setPower1(screen.getPower1() - 25);
+        }
 
         setTouchable(Touchable.enabled);
         setOrigin(32, 16);
-        
+
         angle = new Vector2(r, 0);
 
         shotDelta = 0;
@@ -46,7 +50,7 @@ public class Player extends Entity {
     @Override
     public void act(float delta){
 
-        
+
         calcVelocity(delta);
         calcAngle(delta);
 
@@ -71,7 +75,7 @@ public class Player extends Entity {
         setY(position.y);
 
         setRotation(angle.x);
-        
+
         if (velocity.x < 0 && !flipped){
             tex.flip(true, false);
             setDrawable(new TextureRegionDrawable(tex));
@@ -82,7 +86,7 @@ public class Player extends Entity {
             setDrawable(new TextureRegionDrawable(tex));
             flipped = false;
         }
-        
+
 
         shotDelta += delta;
     }
@@ -101,7 +105,7 @@ public class Player extends Entity {
     }
 
     public void calcAngle(float delta){
-        
+
         if((Gdx.input.isButtonPressed(Buttons.LEFT))) {
             Vector2 mouse = ((AbstractScreen) game.getScreen()).getStage().screenToStageCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
             float mAngle = (float) toDegrees(atan((mouse.y - position.y) / (mouse.x - position.x)));
@@ -110,7 +114,7 @@ public class Player extends Entity {
             else mAngle += 180 - 90;
             shoot(delta, mAngle);
         }
-        
+
         /*if (angle.x >= 0) angle.x = angle.x % 360;
          * else angle.x += 360;
          * if (Gdx.input.isKeyPressed(A) && Gdx.input.isKeyPressed(W)){
@@ -161,6 +165,10 @@ public class Player extends Entity {
                 (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle,
                 game));
             shotDelta = 0;
+            if (game.getScreen() instanceof GameScreen){
+                GameScreen screen = ((GameScreen) game.getScreen());
+                screen.setPower1(screen.getPower1() - 1);
+            }
         }
     }
 

@@ -2,17 +2,17 @@ package org.bytefire.ld27.core.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.entities.Base;
 import org.bytefire.ld27.core.entities.Enemy;
 import org.bytefire.ld27.core.entities.Player;
 
 public class GameScreen extends AbstractScreen {
-
-    private Player player;
-    private OrthographicCamera cam;
 
     private static final int STAGE_WIDTH = 3416;
     private static final int STAGE_HEIGHT = 960;
@@ -21,15 +21,32 @@ public class GameScreen extends AbstractScreen {
 
     private final Random rand;
 
+    private float power1;
+    private float power2;
+    private Player player;
+    private OrthographicCamera cam;
+    private SpriteBatch hud;
+    private BitmapFont hudFont;
+
     public GameScreen(LD27 game){
         super(game);
         player = null;
-    rand = new Random(System.nanoTime());
+        rand = new Random(System.nanoTime());
+        power1 = 1000;
+        power2 = 1000;
+        hud = new SpriteBatch();
+        hudFont = new BitmapFont();
     }
 
     @Override
     public void render(float delta){
         super.render(delta);
+
+        hud.begin();
+        hudFont.setColor(0.5F, 0.5F, 1F, 1F);
+        hudFont.draw(hud, "Power: " + Float.toString(power1), 64, 64);
+        hudFont.draw(hud, "Power: " + Float.toString(power2), Gdx.graphics.getWidth() - 164, 64);
+        hud.end();
     }
 
     @Override
@@ -75,6 +92,22 @@ public class GameScreen extends AbstractScreen {
         cam.update();
     }
 
+    public float getPower1(){
+        return power1;
+    }
+
+    public void setPower1(float power){
+        power1 = power;
+    }
+
+    public float getPower2(){
+        return power2;
+    }
+
+    public void setPower2(float power){
+        power2 = power;
+    }
+
     private void addFloor(){
         int width = (int) Math.ceil(stage.getWidth() / Tex.MOON.width);
         for (int i = 0; i < width; i++){
@@ -89,15 +122,15 @@ public class GameScreen extends AbstractScreen {
     }
 
     private void addBases(){
-        Image base1 = new Image(game.getTextureHandler().getRegion(Tex.BASE));
-        base1.setX(0);
-        base1.setY(Tex.BASE.height - 48);
-
-        Image base2 = new Image(game.getTextureHandler().getRegion(Tex.BASE));
-        base2.setX(stage.getWidth() - Tex.BASE.width);
-        base2.setY(Tex.BASE.height - 48);
+        Base base1 = new Base(0, Tex.BASE.height - 48, false, game);
+        Base base2 = new Base((int) (stage.getWidth() - Tex.BASE.width), Tex.BASE.height - 48, true, game);
 
         stage.addActor(base1);
         stage.addActor(base2);
+    }
+
+    @Override
+    public void dispose(){
+        hud.dispose();
     }
 }

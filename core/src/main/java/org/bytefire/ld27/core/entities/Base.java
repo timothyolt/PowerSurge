@@ -12,21 +12,23 @@ public class Base extends Entity {
 
     public Base(int x, int y, boolean player, LD27 game){
         super(x, y, game.getTextureHandler().getRegion(Tex.BASE), game);
+        System.out.println(y);
+        System.out.println(getY());
         this.player = player;
         health = 250;
         setTouchable(Touchable.enabled);
     }
 
     public void takeDamage(float damage){
+        System.out.println(getY());
         health -= damage;
-        if (health < 0) remove();
-        System.out.println(health);
+        if (health <= 0) game.setScreen(new EndScreen(player ? "GAME OVER, LOSER" : "YOUR PRIDE WILL BE YOUR DOWNFALL", game));
+        //System.out.println(health);
     }
 
+    public void actGravity(float delta){}
+
     @Override
-    public boolean remove(){
-        if (health < 0) game.setScreen(new EndScreen(player ? "GAME OVER, LOSER" : "YOUR PRIDE WILL BE YOUR DOWNFALL", game));
-        return super.remove();
-    }
+    public void actVelocity(float delta){}
 
 }

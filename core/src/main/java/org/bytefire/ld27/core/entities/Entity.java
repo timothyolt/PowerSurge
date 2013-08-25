@@ -95,23 +95,23 @@ public abstract class Entity extends Image{
         return origin;
     }
 
-    @Override
-     public void setOriginX(float x) {
-        super.setOriginX(x);
-        origin.x = x;
-     }
-
-     @Override
-     public void setOriginY(float y) {
-        super.setOriginY(y);
-        origin.y = y;
-     }
-
-     @Override
-     public void setOrigin(float x, float y) {
-        super.setOrigin(x, y);
-        origin.x = x;
-        origin.y = y;
-     }
+//    @Override
+//     public void setOriginX(float x) {
+//        super.setOriginX(x);
+//        origin.x = x;
+//     }
+//
+//     @Override
+//     public void setOriginY(float y) {
+//        super.setOriginY(y);
+//        origin.y = y;
+//     }
+//
+//     @Override
+//     public void setOrigin(float x, float y) {
+//        super.setOrigin(x, y);
+//        origin.x = x;
+//        origin.y = y;
+//     }
 
 }

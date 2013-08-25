@@ -44,8 +44,8 @@ public class GameScreen extends AbstractScreen {
 
         hud.begin();
         hudFont.setColor(0.5F, 0.5F, 1F, 1F);
-        hudFont.draw(hud, "Power: " + Float.toString(power1), 64, 64);
-        hudFont.draw(hud, "Power: " + Float.toString(power2), Gdx.graphics.getWidth() - 164, 64);
+        hudFont.draw(hud, "Power: " + Float.toString(power2), 64, 64);
+        hudFont.draw(hud, "Power: " + Float.toString(power1), Gdx.graphics.getWidth() - 164, 64);
         hud.end();
     }
 

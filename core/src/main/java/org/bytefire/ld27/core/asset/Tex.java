@@ -6,7 +6,7 @@ import com.badlogic.gdx.files.FileHandle;
 public enum Tex {
 
     SPLASH(Gdx.files.internal("studio.png"), 0, 0, 0),
-    PLAYER(Gdx.files.internal("level.png"), 64, 64, 16),
+    PLAYER(Gdx.files.internal("level.png"), 32, 32, 64),
     SHOT(Gdx.files.internal("level.png"), 16, 16, 384),
     MOON(Gdx.files.internal("level.png"), 128, 128, 2),
     MOON_ALT(Gdx.files.internal("level.png"), 128, 128, 3),

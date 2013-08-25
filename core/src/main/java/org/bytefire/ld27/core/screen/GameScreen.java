@@ -18,9 +18,14 @@ public class GameScreen extends AbstractScreen {
     private static final int STAGE_HEIGHT = 960;
     private static final int WINDOW_WIDTH = 854;
     private static final int WINDOW_HEIGHT = 480;
+    
+    private static final int MAX_ENEMIES = 5;
 
     private final Random rand;
 
+    private int enemyCount;
+    private int coolDownTime;
+    
     private float power1;
     private float power2;
     private Player player;
@@ -36,17 +41,20 @@ public class GameScreen extends AbstractScreen {
         power2 = 1000;
         hud = new SpriteBatch();
         hudFont = new BitmapFont();
+        coolDownTime = 0;
     }
 
     @Override
     public void render(float delta){
         super.render(delta);
-
+        coolDownTime += delta;
         hud.begin();
         hudFont.setColor(0.5F, 0.5F, 1F, 1F);
         hudFont.draw(hud, "Power: " + Float.toString(power1), 64, 64);
         hudFont.draw(hud, "Power: " + Float.toString(power2), Gdx.graphics.getWidth() - 164, 64);
         hud.end();
+        
+        addEnemy(coolDownTime);
     }
 
     @Override
@@ -58,15 +66,14 @@ public class GameScreen extends AbstractScreen {
         cam.zoom = 0.25F;
         stage.setCamera(cam);
 
-        player = new Player((int)stage.getWidth() - Tex.PLAYER.width, 130, 0, game);
-
         Gdx.input.setInputProcessor(stage);
 
         addFloor();
         addBases();
 
-        stage.addActor(player);
-        stage.addActor(new Enemy(0 + Tex.PLAYER.width, 100, 0, game));
+        addEnemy(10);
+        newPlayer();
+        
     }
 
     @Override
@@ -77,6 +84,22 @@ public class GameScreen extends AbstractScreen {
     public Player getPlayer(){
         return player;
     }
+    
+    public void newPlayer(){
+        player = new Player((int)stage.getWidth() - Tex.PLAYER.width, 130, 0, game);
+        stage.addActor(player);
+    }
+    
+    public void addEnemy(float delta){
+        if(enemyCount < MAX_ENEMIES && delta > 10){
+            coolDownTime = 0;
+            enemyCount++;
+            stage.addActor(new Enemy(0 + Tex.PLAYER.width, 100, 0, game));
+        }
+        else coolDownTime += delta;
+    }
+    
+    
 
     public OrthographicCamera getCamera(){
         return cam;

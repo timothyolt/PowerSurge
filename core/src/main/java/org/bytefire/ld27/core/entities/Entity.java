@@ -12,6 +12,7 @@ public abstract class Entity extends Image{
 
     protected static final float GRAVITATIONAL_ACCELERATION = 128F;
     protected static final float MAX_GRAVITY = 256F;
+    private static final float IMMUNITY = 3;
 
     protected final LD27 game;
     protected final Rectangle bound;
@@ -19,6 +20,8 @@ public abstract class Entity extends Image{
     protected final Vector2 origin;
     protected final Vector2 position;
     protected final Vector2 velocity;
+    
+    protected float life;
 
     public Entity(int x, int y, TextureRegion tex, Rectangle bound, LD27 game){
         super(tex);
@@ -33,6 +36,7 @@ public abstract class Entity extends Image{
         origin = new Vector2(getWidth()/2, getHeight()/2);
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
+        life = 0;
     }
 
     public Entity(int x, int y, TextureRegion tex, LD27 game){
@@ -48,6 +52,8 @@ public abstract class Entity extends Image{
 
         setX(position.x);
         setY(position.y);
+        
+        life += delta;
     }
 
 //    @Override
@@ -113,5 +119,9 @@ public abstract class Entity extends Image{
         origin.x = x;
         origin.y = y;
      }
+    
+    public float getLife(){
+        return life;
+    }
 
 }

@@ -9,10 +9,13 @@ import static java.lang.Math.*;
 import org.bytefire.ld27.core.asset.Sfx;
 import org.bytefire.ld27.core.asset.Tex;
 import org.bytefire.ld27.core.screen.AbstractScreen;
+import org.bytefire.ld27.core.screen.GameScreen;
 
 public class Shot extends Entity {
 
     private static final float MAX_VELOCITY = 1024;
+    
+    private float lifeDelta;
 
     private final Vector2 angle;
     private final boolean teamPlayer;
@@ -23,6 +26,8 @@ public class Shot extends Entity {
         setTouchable(Touchable.disabled);
 
         setRotation(r);
+        
+        lifeDelta = 0;
 
         velocity.set((float) cos(toRadians(r + 90)) * MAX_VELOCITY, (float) sin(toRadians(r + 90)) * MAX_VELOCITY);
         angle = new Vector2(r, 0);
@@ -33,7 +38,7 @@ public class Shot extends Entity {
 
     @Override
     public void act(float delta){
-
+        
         float newx = position.x + (velocity.x * delta);
         float newy = position.y + (velocity.y * delta);
 
@@ -56,9 +61,18 @@ public class Shot extends Entity {
             ((Base) hit).takeDamage(5);
             remove();
         }
+        else if (hit != null && hit instanceof Player && teamPlayer == false){
+            ((GameScreen)game.getScreen()).newPlayer();
+            hit.remove();
+            remove();
+        }
 
         setRotation(angle.x);
 
         if(position.y <= 128) remove();
+        
+        
+        lifeDelta += delta;
+        if(lifeDelta > .5) remove();
     }
 }

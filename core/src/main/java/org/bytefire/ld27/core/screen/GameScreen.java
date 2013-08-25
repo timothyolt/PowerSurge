@@ -3,6 +3,7 @@ package org.bytefire.ld27.core.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
 import org.bytefire.ld27.core.entities.Enemy;
@@ -18,9 +19,12 @@ public class GameScreen extends AbstractScreen {
     private static final int WINDOW_WIDTH = 854;
     private static final int WINDOW_HEIGHT = 480;
 
+    private final Random rand;
+
     public GameScreen(LD27 game){
         super(game);
         player = null;
+    rand = new Random(System.nanoTime());
     }
 
     @Override
@@ -42,6 +46,7 @@ public class GameScreen extends AbstractScreen {
         Gdx.input.setInputProcessor(stage);
 
         addFloor();
+        addBases();
 
         stage.addActor(player);
         stage.addActor(new Enemy(STAGE_WIDTH/2-150, 100, 0, game));
@@ -73,10 +78,26 @@ public class GameScreen extends AbstractScreen {
     private void addFloor(){
         int width = (int) Math.ceil(stage.getWidth() / Tex.MOON.width);
         for (int i = 0; i < width; i++){
-            Image moon = new Image(game.getTextureHandler().getRegion(Tex.MOON));
+            Image moon;
+            if (rand.nextInt() % 4 == 1)
+                 moon = new Image(game.getTextureHandler().getRegion(Tex.MOON_ALT));
+            else moon = new Image(game.getTextureHandler().getRegion(Tex.MOON));
             moon.setX(i * Tex.MOON.width);
             moon.setY(0);
             stage.addActor(moon);
         }
+    }
+
+    private void addBases(){
+        Image base1 = new Image(game.getTextureHandler().getRegion(Tex.BASE));
+        base1.setX(0);
+        base1.setY(Tex.BASE.height);
+
+        Image base2 = new Image(game.getTextureHandler().getRegion(Tex.BASE));
+        base2.setX(stage.getWidth() - Tex.BASE.width);
+        base2.setY(Tex.BASE.height);
+
+        stage.addActor(base1);
+        stage.addActor(base2);
     }
 }

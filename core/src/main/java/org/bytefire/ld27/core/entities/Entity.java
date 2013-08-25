@@ -52,12 +52,17 @@ public abstract class Entity extends Image{
         setY(position.y);
     }
     
-    @Override
-    public Actor hit (float x, float y, boolean touchable) {	
-        if (touchable && getTouchable() != Touchable.enabled) return null;
-        return x >= bound.x + origin.x && x < bound.width + origin.x &&
-               y >= bound.y + origin.y && y < bound.height + origin.y ? this : null;
-    }
+//    @Override
+//    public Actor hit (float x, float y, boolean touchable) {
+//        System.out.println("bound.x: " + bound.x);
+//        System.out.println("bound.y: " + bound.y);
+//        System.out.println("origin.x: " + origin.x);
+//        System.out.println("origin.y: " + origin.y);
+//        System.out.println("hit x: " + x);
+//        if (touchable && getTouchable() != Touchable.enabled) return null;
+//        return x >= bound.x + origin.x && x < bound.width + origin.x &&
+//               y >= bound.y + origin.y && y < bound.height + origin.y ? this : null;
+//    }
     
     public void actGravity(float delta){
         float gravity = velocity.y - GRAVITATIONAL_ACCELERATION;
@@ -70,22 +75,26 @@ public abstract class Entity extends Image{
 
         if (newx < 0 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth()) remove();
         if (newy > ((AbstractScreen) game.getScreen()).getStage().getHeight()) remove();
-        else if (newy < Tex.MOON.height + origin.y - bound.y){
+        else if (newy < Tex.MOON.height - bound.y){
             if (velocity.y < 0) velocity.y = 0;
-            newy = Tex.MOON.height + origin.y - bound.y;
+            newy = Tex.MOON.height - bound.y;
         }
         position.x = newx;
         position.y = newy;
     }
     
-    @Override
-    public float getX() {
-        return position.x - origin.x;
-    }
+//    @Override
+//    public float getX() {
+//        return position.x - origin.x;
+//    }
     
-    @Override
-    public float getY() {
-        return position.y - origin.y;
+//    @Override
+//    public float getY() {
+//        return position.y - origin.y;
+//    }
+    
+    public Vector2 getOrigin() { 
+        return origin;
     }
 
     @Override
@@ -102,9 +111,6 @@ public abstract class Entity extends Image{
      
      @Override
      public void setOrigin(float x, float y) {
-        System.out.println(x);
-        System.out.println(origin.x);
-
         super.setOrigin(x, y);
         origin.x = x;
         origin.y = y;

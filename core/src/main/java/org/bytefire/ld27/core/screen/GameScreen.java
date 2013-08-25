@@ -91,11 +91,11 @@ public class GameScreen extends AbstractScreen {
     private void addBases(){
         Image base1 = new Image(game.getTextureHandler().getRegion(Tex.BASE));
         base1.setX(0);
-        base1.setY(Tex.BASE.height);
+        base1.setY(Tex.BASE.height - 48);
 
         Image base2 = new Image(game.getTextureHandler().getRegion(Tex.BASE));
         base2.setX(stage.getWidth() - Tex.BASE.width);
-        base2.setY(Tex.BASE.height);
+        base2.setY(Tex.BASE.height - 48);
 
         stage.addActor(base1);
         stage.addActor(base2);

@@ -58,9 +58,9 @@ public class Player extends Entity {
 
         if (newx < 0 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth()) velocity.x *= -2;
         if (newy > ((AbstractScreen) game.getScreen()).getStage().getHeight()) velocity.y *= -2;
-        else if (newy < Tex.MOON.height + origin.y - bound.y) {
+        else if (newy < Tex.MOON.height - bound.y) {
             if (velocity.y < 0) velocity.y = 0;
-            newy = Tex.MOON.height + origin.y - bound.y;
+            newy = Tex.MOON.height - bound.y;
         }
         position.x = newx;
         position.y = newy;
@@ -158,7 +158,7 @@ public class Player extends Entity {
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) position.x, (int) position.y, (int) angle,
+                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle,
                 game));
             shotDelta = 0;
         }

@@ -9,7 +9,8 @@ public enum Tex {
     PLAYER(Gdx.files.internal("level.png"), 64, 64, 16),
     SHOT(Gdx.files.internal("level.png"), 16, 16, 384),
     MOON(Gdx.files.internal("level.png"), 128, 128, 2),
-    RHOMBUS(Gdx.files.internal("warmup.png"), 16, 16, 2);
+    MOON_ALT(Gdx.files.internal("level.png"), 128, 128, 3),
+    BASE(Gdx.files.internal("level.png"), 256, 128, 0);
 
     public final FileHandle file;
     public final int width;

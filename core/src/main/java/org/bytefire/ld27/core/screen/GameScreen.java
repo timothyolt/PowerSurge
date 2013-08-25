@@ -41,7 +41,7 @@ public class GameScreen extends AbstractScreen {
         cam.zoom = 0.25F;
         stage.setCamera(cam);
 
-        player = new Player(STAGE_WIDTH / 2, 130, 0, game);
+        player = new Player((int)stage.getWidth() - Tex.PLAYER.width, 130, 0, game);
 
         Gdx.input.setInputProcessor(stage);
 
@@ -49,7 +49,7 @@ public class GameScreen extends AbstractScreen {
         addBases();
 
         stage.addActor(player);
-        stage.addActor(new Enemy(STAGE_WIDTH/2-150, 100, 0, game));
+        stage.addActor(new Enemy(0 + Tex.PLAYER.width, 100, 0, game));
     }
 
     @Override

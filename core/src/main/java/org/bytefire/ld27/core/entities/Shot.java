@@ -15,8 +15,9 @@ public class Shot extends Entity {
     private static final float MAX_VELOCITY = 1024;
     
     private final Vector2 angle;
+    private final boolean teamPlayer;
     
-    public Shot(int x, int y, int r, LD27 game){
+    public Shot(int x, int y, int r, boolean teamPlayer, LD27 game){
         super(x, y, game.getTextureHandler().getRegion(Tex.SHOT), game);
         
         setTouchable(Touchable.disabled);
@@ -25,6 +26,7 @@ public class Shot extends Entity {
         
         velocity.set((float) cos(toRadians(r + 90)) * MAX_VELOCITY, (float) sin(toRadians(r + 90)) * MAX_VELOCITY);
         angle = new Vector2(r, 0);
+        this.teamPlayer = teamPlayer;
         
         game.getSfxHandler().play(Sfx.SHOOT);
     }
@@ -46,10 +48,7 @@ public class Shot extends Entity {
         setY(position.y);
         
         Actor hit = ((AbstractScreen)game.getScreen()).getStage().hit(getX(), getY(), true);
-        System.out.println("shot x: " + getX());
-        //System.out.println("y: " + getY());
-        if (hit != null && hit instanceof Enemy){
-            System.out.println(((AbstractScreen)game.getScreen()).getStage().hit(getX(), getY(), true));
+        if (hit != null && hit instanceof Enemy && teamPlayer == true){
             hit.remove();
             remove();
         }

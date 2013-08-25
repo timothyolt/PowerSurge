@@ -22,7 +22,7 @@ public class Player extends Entity {
     private static final float POWER = 64F;
     private static final float FRICTION = 16F;
     private static final float ANGUALR_POWER = 10F;
-    private static final float FIRE_RATE = 0.1F;
+    private static final float FIRE_RATE = 0.5F;
 
     private final Vector2 angle;
     private final TextureRegion tex;
@@ -158,7 +158,7 @@ public class Player extends Entity {
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle,
+                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, true, 
                 game));
             shotDelta = 0;
         }

@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import org.bytefire.ld27.core.LD27;
-import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.asset.Sprite;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 import org.bytefire.ld27.core.screen.GameScreen;
 
@@ -80,9 +80,9 @@ public abstract class Entity extends Image{
 
         if (newx < 0 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth()) remove();
         if (newy > ((AbstractScreen) game.getScreen()).getStage().getHeight()) remove();
-        else if (newy < Tex.MOON.height - bound.y){
+        else if (newy < Sprite.MOON.height - bound.y){
             if (velocity.y < 0) velocity.y = 0;
-            newy = Tex.MOON.height - bound.y;
+            newy = Sprite.MOON.height - bound.y;
         }
         position.x = newx;
         position.y = newy;

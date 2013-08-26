@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.asset.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import org.bytefire.ld27.core.screen.GameScreen;
@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import static org.bytefire.ld27.core.entities.Entity.GRAVITATIONAL_ACCELERATION;
 import static java.lang.Math.*;
+import org.bytefire.ld27.core.asset.Audio;
 
 public class Player extends Entity {
 
@@ -24,18 +25,23 @@ public class Player extends Entity {
     private static final float FRICTION = 16F;
     private static final float ANGUALR_POWER = 10F;
     private static final float FIRE_RATE = 0.5F;
+    private static final float ALLY_SPAWN_TIME = 5;
+    private static final float FLY_SFX_LENGTH = 2.887F;
 
     private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
-    
+    private final GameScreen screen;
+
     private float power;
     private float shotDelta;
+    private float flyDelta;
+    private boolean flyLooping;
     private boolean flipped;
 
     public Player(int x, int y, int r, LD27 game){
-        super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), new Rectangle(23, 0, 17, 28), game);
-        tex = game.getTextureHandler().getRegion(Tex.PLAYER);
+        super(x, y, game.getSpriteHandler().getRegion(Sprite.PLAYER), new Rectangle(23, 0, 17, 28), game);
+        tex = game.getSpriteHandler().getRegion(Sprite.PLAYER);
         if (game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
         else screen = null;
 
@@ -46,6 +52,8 @@ public class Player extends Entity {
 
         power = 0;
         shotDelta = 0;
+        flyDelta = 0;
+        flyLooping = false;
         flipped = false;
     }
 
@@ -64,9 +72,9 @@ public class Player extends Entity {
 
         if (newx < 212 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth() - 212) velocity.x *= -2;
         if (newy > ((AbstractScreen) game.getScreen()).getStage().getHeight()) velocity.y *= -2;
-        else if (newy < Tex.MOON.height - bound.y) {
+        else if (newy < Sprite.MOON.height - bound.y) {
             if (velocity.y < 0) velocity.y = 0;
-            newy = Tex.MOON.height - bound.y;
+            newy = Sprite.MOON.height - bound.y;
         }
         position.x = newx;
         position.y = newy;
@@ -102,7 +110,7 @@ public class Player extends Entity {
     public void draw(SpriteBatch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
 
-        batch.draw(game.getTextureHandler().getRegion(Tex.ARM),
+        batch.draw(game.getSpriteHandler().getRegion(Sprite.ARM),
             getX() + 1, getY() - 3,     //Position
             16, 16,                     //Origin
             32, 32,                     //Width/Height
@@ -120,7 +128,18 @@ public class Player extends Entity {
             if (velocity.x > FRICTION) velocity.x -= FRICTION;
             else velocity.x = 0;
         if ((Gdx.input.isKeyPressed(DOWN) || Gdx.input.isKeyPressed(S)) && velocity.y > -MAX_VELOCITY) velocity.y -= POWER;
-        if ((Gdx.input.isKeyPressed(UP) || Gdx.input.isKeyPressed(W)) && velocity.y < MAX_VELOCITY)  velocity.y += POWER * 4;
+        if ((Gdx.input.isKeyPressed(UP) || Gdx.input.isKeyPressed(W)) && velocity.y < MAX_VELOCITY){
+            velocity.y += POWER * 4;
+            if (screen != null) screen.setPower1(screen.getPower1() - delta);
+            if (flyDelta == 0) game.getAudioHandler().play(Audio.FLY);
+            else if (!flyLooping && flyDelta > FLY_SFX_LENGTH) game.getAudioHandler().loop(Audio.FLY_LOOP);
+        }
+        else if (flyDelta > 0){
+            game.getAudioHandler().stop(Audio.FLY);
+            game.getAudioHandler().stop(Audio.FLY_LOOP);
+            flyDelta = 0;
+        }
+        flyDelta += delta;
     }
 
     public float getAngleToMouse(){
@@ -199,15 +218,15 @@ public class Player extends Entity {
     public void calcPower(float delta){
         if(power > 10) {
             remove();
-            ((GameScreen) game.getScreen()).addPlayer();
+            if (screen != null) screen.addPlayer();
         }
         else power += delta/2;
     }
-    
+
     public float getPower(){
         return power;
     }
-    
+
     public void setPower(float newPower){
         power = newPower;
     }

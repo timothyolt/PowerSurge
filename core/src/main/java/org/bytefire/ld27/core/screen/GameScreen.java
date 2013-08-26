@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import java.util.ArrayList;
 import java.util.Random;
 import org.bytefire.ld27.core.LD27;
-import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.asset.Sprite;
 import org.bytefire.ld27.core.entities.Ally;
 import org.bytefire.ld27.core.entities.AllyHeavy;
 import org.bytefire.ld27.core.entities.EnemyHeavy;
@@ -145,7 +145,7 @@ public class GameScreen extends AbstractScreen {
     public void addEnemy(float delta){
         if(getEnemies().size() < MAX_ENEMIES && rand.nextInt() % RESPAWN_CHANCE == 1 && coolDownTime > RESPAWN_TIME && power2 > 25){
             coolDownTime = 0;
-            midground.addActor(new Enemy(Tex.BASE.width / 2 + 212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
+            midground.addActor(new Enemy(Sprite.BASE.width / 2 + 212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
         }
         else
         coolDownTime += delta;
@@ -207,8 +207,8 @@ public class GameScreen extends AbstractScreen {
         if (y > stage.getHeight() - (WINDOW_HEIGHT / 2)) cam.position.y = stage.getHeight() - (WINDOW_HEIGHT / 2);
         else cam.position.y = y;
 
-        starfield.setX((cam.position.x * STARFIELD_SCALE) - (Tex.STARS.width * STARFIELD_PADDING / 2));
-        starfield.setY((cam.position.y * STARFIELD_SCALE) - (Tex.STARS.height * STARFIELD_PADDING / 2));
+        starfield.setX((cam.position.x * STARFIELD_SCALE) - (Sprite.STARS.width * STARFIELD_PADDING / 2));
+        starfield.setY((cam.position.y * STARFIELD_SCALE) - (Sprite.STARS.height * STARFIELD_PADDING / 2));
 
         cam.update();
     }
@@ -230,18 +230,18 @@ public class GameScreen extends AbstractScreen {
     }
 
     private void addStars(){
-        int width = (int) Math.ceil(stage.getWidth() / Tex.STARS.width * STARFIELD_SCALE) + STARFIELD_PADDING;
-        int height = (int) Math.ceil(stage.getHeight() / Tex.STARS.height * STARFIELD_SCALE) + STARFIELD_PADDING;
-        for (int x = 0; x < width; x++) for (int y = Tex.MOON.height / Tex.STARS.height; y < height; y++){
-            Image stars = new Image(game.getTextureHandler().getRegion(Tex.STARS));
-            stars.setX(x * Tex.STARS.width);
-            stars.setY(y * Tex.STARS.height);
+        int width = (int) Math.ceil(stage.getWidth() / Sprite.STARS.width * STARFIELD_SCALE) + STARFIELD_PADDING;
+        int height = (int) Math.ceil(stage.getHeight() / Sprite.STARS.height * STARFIELD_SCALE) + STARFIELD_PADDING;
+        for (int x = 0; x < width; x++) for (int y = Sprite.MOON.height / Sprite.STARS.height; y < height; y++){
+            Image stars = new Image(game.getSpriteHandler().getRegion(Sprite.STARS));
+            stars.setX(x * Sprite.STARS.width);
+            stars.setY(y * Sprite.STARS.height);
             starfield.addActor(stars);
             if (rand.nextInt() % 6 == 1){
                 Image bigStar = new Image(game.getTextureHandler().getRegion(Tex.STARS_ALT));
                 bigStar.setColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1F);
-                bigStar.setX(x * Tex.STARS.width);
-                bigStar.setY(y * Tex.STARS.height);
+                bigStar.setX(x * Sprite.STARS.width);
+                bigStar.setY(y * Sprite.STARS.height);
                 starfield.addActor(bigStar);
             }
         }
@@ -249,28 +249,28 @@ public class GameScreen extends AbstractScreen {
     }
 
     private void addFloor(){
-        int width = (int) Math.ceil(stage.getWidth() / Tex.MOON.width);
+        int width = (int) Math.ceil(stage.getWidth() / Sprite.MOON.width);
         for (int i = 0; i < width; i++){
             Image moon;
             if (rand.nextInt() % 4 == 1)
-                 moon = new Image(game.getTextureHandler().getRegion(Tex.MOON_ALT));
-            else moon = new Image(game.getTextureHandler().getRegion(Tex.MOON));
-            moon.setX(i * Tex.MOON.width);
+                 moon = new Image(game.getSpriteHandler().getRegion(Sprite.MOON_ALT));
+            else moon = new Image(game.getSpriteHandler().getRegion(Sprite.MOON));
+            moon.setX(i * Sprite.MOON.width);
             moon.setY(0);
             background.addActor(moon);
 
             Image dark;
-            dark = new Image(game.getTextureHandler().getRegion(Tex.MOON));
+            dark = new Image(game.getSpriteHandler().getRegion(Sprite.MOON));
             dark.setColor(Color.BLACK);
-            dark.setX(i * Tex.MOON.width);
-            dark.setY(-1 * Tex.MOON.width);
+            dark.setX(i * Sprite.MOON.width);
+            dark.setY(-1 * Sprite.MOON.width);
             background.addActor(dark);
         }
     }
 
     private void addBases(){
-        Base base1 = new Base(0, Tex.BASE.height - 48, false, game);
-        Base base2 = new Base((int) (stage.getWidth() - Tex.BASE.width), Tex.BASE.height - 48, true, game);
+        Base base1 = new Base(0, Sprite.BASE.height - 48, false, game);
+        Base base2 = new Base((int) (stage.getWidth() - Sprite.BASE.width), Sprite.BASE.height - 48, true, game);
 
         background.addActor(base1);
         background.addActor(base2);

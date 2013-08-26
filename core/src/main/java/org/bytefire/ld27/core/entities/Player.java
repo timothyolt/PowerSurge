@@ -30,7 +30,8 @@ public class Player extends Entity {
 
     private final Vector2 angle;
     private final TextureRegion tex;
-    
+    private final GameScreen screen;
+
     private float power;
     private float allyCoolDown;
     private float shotDelta;
@@ -208,19 +209,19 @@ public class Player extends Entity {
         }
         else allyCoolDown += delta;
     }
-    
+
     public void calcPower(float delta){
         if(power > 10) {
             remove();
-            ((GameScreen) game.getScreen()).newPlayer();
+            if (screen != null) screen.addPlayer();
         }
         else power += delta/2;
     }
-    
+
     public float getPower(){
         return power;
     }
-    
+
     public void setPower(float newPower){
         power = newPower;
     }

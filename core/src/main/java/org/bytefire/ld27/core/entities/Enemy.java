@@ -1,8 +1,6 @@
 package org.bytefire.ld27.core.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -10,11 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import static java.lang.Math.atan;
 import static java.lang.Math.toDegrees;
-import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
 import org.bytefire.ld27.core.screen.AbstractScreen;
-import org.bytefire.ld27.core.screen.EndScreen;
 
 import org.bytefire.ld27.core.screen.GameScreen;
 
@@ -22,10 +18,10 @@ public class Enemy extends Entity{
 
     private static final float MAX_VELOCITY = 128F;
     private static final float FIRE_RATE = 0.75F;
-    
+
     private final Vector2 angle;
     private final TextureRegion tex;
-    
+
     private float shotDelta;
     private boolean flipped;
 
@@ -43,9 +39,9 @@ public class Enemy extends Entity{
         setRotation(r);
 
         angle = new Vector2(r, 0);
-        
+
         shotDelta = 0;
-        
+
         //game.getSfxHandler().play(Sfx.SHOOT);
     }
 
@@ -54,7 +50,7 @@ public class Enemy extends Entity{
 
         seek(delta);
         calcAngle(delta);
-        
+
         if (velocity.x < 0 && !flipped){
             tex.flip(true, false);
             setDrawable(new TextureRegionDrawable(tex));
@@ -65,7 +61,7 @@ public class Enemy extends Entity{
             setDrawable(new TextureRegionDrawable(tex));
             flipped = false;
         }
-        
+
         shotDelta += delta;
         super.act(delta);
     }
@@ -79,7 +75,7 @@ public class Enemy extends Entity{
         }
         else velocity.x = MAX_VELOCITY;
     }
-    
+
     public void calcAngle(float delta){
         Player target = ((GameScreen)game.getScreen()).getPlayer();
         if(target.position.dst(position) <= Gdx.graphics.getWidth()/2) {
@@ -91,7 +87,7 @@ public class Enemy extends Entity{
             shoot(delta, mAngle);
         }
     }
-    
+
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(

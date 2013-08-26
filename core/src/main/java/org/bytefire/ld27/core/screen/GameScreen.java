@@ -137,7 +137,7 @@ public class GameScreen extends AbstractScreen {
 
     public void addPlayer(){
         if(power1 > 25){
-            player = new Player((int)stage.getWidth() - (Tex.BASE.width / 2) - 212, Tex.MOON.height + Tex.PLAYER.height, 0, game);
+            player = new Player((int)stage.getWidth() - (Sprite.BASE.width / 2) - 212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game);
             midground.addActor(player);
         }
     }
@@ -154,7 +154,7 @@ public class GameScreen extends AbstractScreen {
     public void addEnemyHeavy(float delta){
         if(getEnemyHeavies().size() + getEnemies().size() < MAX_ENEMIES && rand.nextInt() % RESPAWN_CHANCE == 1 && enemyHeavyCoolDownTime > ENEMY_HEAVY_RESPAWN_TIME && power2 > 50){
             enemyHeavyCoolDownTime = 0;
-            midground.addActor(new EnemyHeavy(Tex.BASE.width / 2 + 212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
+            midground.addActor(new EnemyHeavy(Sprite.BASE.width / 2 + 212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
         }
         else
         enemyHeavyCoolDownTime += delta;
@@ -164,7 +164,7 @@ public class GameScreen extends AbstractScreen {
         if(getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME && getPower1() > 25){
             allyCoolDown = 0 ;
             setPower1(getPower1() - 25);
-            midground.addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Tex.BASE.width / 2) -212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
+            midground.addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Sprite.BASE.width / 2) -212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
         }
         else allyCoolDown += delta;
     }
@@ -173,7 +173,7 @@ public class GameScreen extends AbstractScreen {
         if(getAllyHeavies().size() + getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  getPower1() > 50){
             allyCoolDown = 0 ;
             setPower1(getPower1() - 50);
-            midground.addActor(new AllyHeavy((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Tex.BASE.width / 2) -212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
+            midground.addActor(new AllyHeavy((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Sprite.BASE.width / 2) -212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
         }
         else allyCoolDown += delta;
     }
@@ -238,7 +238,7 @@ public class GameScreen extends AbstractScreen {
             stars.setY(y * Sprite.STARS.height);
             starfield.addActor(stars);
             if (rand.nextInt() % 6 == 1){
-                Image bigStar = new Image(game.getTextureHandler().getRegion(Tex.STARS_ALT));
+                Image bigStar = new Image(game.getSpriteHandler().getRegion(Sprite.STARS_ALT));
                 bigStar.setColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1F);
                 bigStar.setX(x * Sprite.STARS.width);
                 bigStar.setY(y * Sprite.STARS.height);

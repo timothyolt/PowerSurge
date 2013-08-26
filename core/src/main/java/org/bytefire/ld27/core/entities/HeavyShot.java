@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import org.bytefire.ld27.core.LD27;
 
 import static java.lang.Math.*;
-import org.bytefire.ld27.core.asset.Sfx;
-import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.asset.Audio;
+import org.bytefire.ld27.core.asset.Sprite;
 import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 import org.bytefire.ld27.core.screen.GameScreen;
@@ -24,7 +24,7 @@ public class HeavyShot extends Entity {
     private final Vector2 angle;
     
     public HeavyShot(int x, int y, int r, BulletFrom bulletFrom, LD27 game){
-        super(x, y, game.getTextureHandler().getRegion(Tex.HEAVY_SHOT), game);
+        super(x, y, game.getSpriteHandler().getRegion(Sprite.HEAVY_SHOT), game);
 
         setTouchable(Touchable.disabled);
 
@@ -36,7 +36,7 @@ public class HeavyShot extends Entity {
         angle = new Vector2(r, 0);
         this.bulletFrom = bulletFrom;
         
-        game.getSfxHandler().play(Sfx.SHOOT);
+        game.getAudioHandler().play(Audio.SHOOT);
     }
 
     @Override

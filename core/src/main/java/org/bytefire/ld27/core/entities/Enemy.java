@@ -97,7 +97,7 @@ public class Enemy extends Entity{
         }
         else velocity.x = MAX_VELOCITY;
 
-        if(position.x > screen.getStage().getWidth() - Tex.BASE.width -212) {
+        if(position.x > screen.getStage().getWidth() - Sprite.BASE.width -212) {
             velocity.x = 0;
             shoot(delta, 270);
         }

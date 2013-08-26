@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Rectangle;
 import static org.bytefire.ld27.core.entities.Entity.GRAVITATIONAL_ACCELERATION;
 import static java.lang.Math.*;
 import org.bytefire.ld27.core.asset.Audio;
+import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
 
 public class Player extends Entity {
 
@@ -31,8 +32,6 @@ public class Player extends Entity {
     private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
-    private final GameScreen screen;
-
     private float power;
     private float shotDelta;
     private float flyDelta;
@@ -213,6 +212,17 @@ public class Player extends Entity {
                 screen.setPower1(screen.getPower1() - 1);
             }
         }
+    }
+    
+    @Override
+    public boolean remove(){
+        if (getLife() > IMMUNITY) {
+            if (screen != null) {
+                ((AbstractScreen) game.getScreen()).getStage().addActor(new Head((int) (position.x + origin.x), (int) (position.y + origin.y), true, game));
+            }
+            return super.remove();
+        }
+        else return false;
     }
     
     public void calcPower(float delta){

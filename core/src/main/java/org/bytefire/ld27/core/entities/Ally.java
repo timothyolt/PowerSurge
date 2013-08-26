@@ -81,7 +81,7 @@ public class Ally extends Entity{
             velocity.y = (float) (((target.getY() - getY()) / dist) * MAX_VELOCITY);
         }
         else velocity.x = -MAX_VELOCITY;
-        if(position.x < Tex.BASE.width + 32) {
+        if(position.x < Tex.BASE.width + 212) {
             velocity.x = 0;
             shoot(delta, 90);
         }

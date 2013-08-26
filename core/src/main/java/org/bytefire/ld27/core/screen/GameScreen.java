@@ -94,14 +94,14 @@ public class GameScreen extends AbstractScreen {
     }
     
     public void newPlayer(){
-        player = new Player((int)stage.getWidth() - (Tex.BASE.width / 2), Tex.MOON.height + Tex.PLAYER.height, 0, game);
+        player = new Player((int)stage.getWidth() - (Tex.BASE.width / 2) - 212, Tex.MOON.height + Tex.PLAYER.height, 0, game);
         stage.addActor(player);
     }
     
     public void addEnemy(float delta){
         if(getEnemies().size() < MAX_ENEMIES && coolDownTime > RESPAWN_TIME && power2 > 25){
             coolDownTime = 0;
-            stage.addActor(new Enemy(Tex.BASE.width / 2, Tex.MOON.height + Tex.PLAYER.height, 0, game));
+            stage.addActor(new Enemy(Tex.BASE.width / 2 + 212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
         }
         else 
         coolDownTime += delta;

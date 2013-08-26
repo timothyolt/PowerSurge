@@ -64,7 +64,7 @@ public class Player extends Entity {
         float newx = position.x + (velocity.x * delta);
         float newy = position.y + (velocity.y * delta);
 
-        if (newx < 0 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth()) velocity.x *= -2;
+        if (newx < 212 || newx > ((AbstractScreen) game.getScreen()).getStage().getWidth() - 212) velocity.x *= -2;
         if (newy > ((AbstractScreen) game.getScreen()).getStage().getHeight()) velocity.y *= -2;
         else if (newy < Tex.MOON.height - bound.y) {
             if (velocity.y < 0) velocity.y = 0;
@@ -201,7 +201,7 @@ public class Player extends Entity {
         if(((GameScreen) game.getScreen()).getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  ((GameScreen)game.getScreen()).getPower1() >25){
             allyCoolDown = 0 ;
             ((GameScreen)game.getScreen()).setPower1(((GameScreen)game.getScreen()).getPower1() - 25);
-            ((AbstractScreen) game.getScreen()).getStage().addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Tex.BASE.width / 2), Tex.MOON.height + Tex.PLAYER.height, 0, game));
+            ((AbstractScreen) game.getScreen()).getStage().addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Tex.BASE.width / 2) -212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
         }
         else allyCoolDown += delta;
     }

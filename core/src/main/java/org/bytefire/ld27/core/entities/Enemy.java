@@ -89,8 +89,8 @@ public class Enemy extends Entity{
             velocity.y = (float) (((screen.getPlayer().getY() - getY()) / dist) * MAX_VELOCITY);
         }
         else velocity.x = MAX_VELOCITY;
-
-        if(position.x > ((AbstractScreen) game.getScreen()).getStage().getWidth() - Tex.BASE.width -32) {
+        
+        if(position.x > ((AbstractScreen) game.getScreen()).getStage().getWidth() - Tex.BASE.width -212) {
             velocity.x = 0;
             shoot(delta, 270);
         }

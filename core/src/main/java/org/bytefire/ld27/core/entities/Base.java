@@ -12,8 +12,6 @@ public class Base extends Entity {
 
     public Base(int x, int y, boolean player, LD27 game){
         super(x, y, game.getTextureHandler().getRegion(Tex.BASE), game);
-        System.out.println(y);
-        System.out.println(getY());
         this.player = player;
         health = 250;
         setTouchable(Touchable.enabled);
@@ -26,6 +24,7 @@ public class Base extends Entity {
         //System.out.println(health);
     }
 
+    @Override
     public void actGravity(float delta){}
 
     @Override

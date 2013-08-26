@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import org.bytefire.ld27.core.screen.GameScreen;
 
 import static com.badlogic.gdx.Input.Keys.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import static org.bytefire.ld27.core.entities.Entity.GRAVITATIONAL_ACCELERATION;
 import static java.lang.Math.*;
@@ -90,6 +91,18 @@ public class Player extends Entity {
         shotDelta += delta;
     }
 
+    @Override
+    public void draw(SpriteBatch batch, float parentAlpha){
+        super.draw(batch, parentAlpha);
+
+        batch.draw(game.getTextureHandler().getRegion(Tex.ARM),
+            getX() + 1, getY() - 3,     //Position
+            16, 16,                     //Origin
+            32, 32,                     //Width/Height
+            1, 1,                       //Scale
+            getAngleToMouse());         //Rotation
+    }
+
     public void calcVelocity(float delta){
         if ((Gdx.input.isKeyPressed(LEFT) || Gdx.input.isKeyPressed(A)) && velocity.x > -MAX_VELOCITY) velocity.x -= POWER;
         else if (velocity.x < 0)
@@ -103,15 +116,19 @@ public class Player extends Entity {
         if ((Gdx.input.isKeyPressed(UP) || Gdx.input.isKeyPressed(W)) && velocity.y < MAX_VELOCITY)  velocity.y += POWER * 4;
     }
 
+    public float getAngleToMouse(){
+        Vector2 mouse = ((AbstractScreen) game.getScreen()).getStage().screenToStageCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+        float mAngle = (float) toDegrees(atan((mouse.y - position.y) / (mouse.x - position.x)));
+        //GDX angles have 0 up, not right
+        if (mouse.x - position.x > 0) mAngle += 360 - 90;
+        else mAngle += 180 - 90;
+        return mAngle;
+    }
+
     public void calcAngle(float delta){
 
         if((Gdx.input.isButtonPressed(Buttons.LEFT))) {
-            Vector2 mouse = ((AbstractScreen) game.getScreen()).getStage().screenToStageCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
-            float mAngle = (float) toDegrees(atan((mouse.y - position.y) / (mouse.x - position.x)));
-            //GDX angles have 0 up, not right
-            if (mouse.x - position.x > 0) mAngle += 360 - 90;
-            else mAngle += 180 - 90;
-            shoot(delta, mAngle);
+            shoot(delta, getAngleToMouse());
         }
 
         /*if (angle.x >= 0) angle.x = angle.x % 360;

@@ -7,11 +7,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
 import org.bytefire.ld27.core.screen.AbstractScreen;
+import org.bytefire.ld27.core.screen.GameScreen;
 
 public abstract class Entity extends Image{
 
     protected static final float GRAVITATIONAL_ACCELERATION = 128F;
     protected static final float MAX_GRAVITY = 256F;
+    protected static final float IMMUNITY = 3;
 
     protected final LD27 game;
     protected final Rectangle bound;
@@ -19,6 +21,8 @@ public abstract class Entity extends Image{
     protected final Vector2 origin;
     protected final Vector2 position;
     protected final Vector2 velocity;
+    
+    protected float life;
 
     public Entity(int x, int y, TextureRegion tex, Rectangle bound, LD27 game){
         super(tex);
@@ -29,10 +33,11 @@ public abstract class Entity extends Image{
         super.setOrigin(getWidth()/2, getHeight()/2);
         setX(x);
         setY(y);
-
+        
         origin = new Vector2(getWidth()/2, getHeight()/2);
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
+        life = 0;
     }
 
     public Entity(int x, int y, TextureRegion tex, LD27 game){
@@ -48,6 +53,8 @@ public abstract class Entity extends Image{
 
         setX(position.x);
         setY(position.y);
+        
+        life += delta;
     }
 
 //    @Override
@@ -113,5 +120,9 @@ public abstract class Entity extends Image{
 //        origin.x = x;
 //        origin.y = y;
 //     }
-
+    
+    public float getLife(){
+        return life;
+    }
+    
 }

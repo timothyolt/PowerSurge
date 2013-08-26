@@ -30,6 +30,7 @@ public class Player extends Entity {
 
     private final Vector2 angle;
     private final TextureRegion tex;
+    private final GameScreen screen;
 
     private float allyCoolDown;
     private float shotDelta;
@@ -38,11 +39,10 @@ public class Player extends Entity {
     public Player(int x, int y, int r, LD27 game){
         super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), new Rectangle(23, 0, 17, 28), game);
         tex = game.getTextureHandler().getRegion(Tex.PLAYER);
-        if (game.getScreen() instanceof GameScreen){
-            GameScreen screen = ((GameScreen) game.getScreen());
-            screen.setPower1(screen.getPower1() - 25);
-        }
+        if (game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
+        else screen = null;
 
+        if (screen != null) screen.setPower1(screen.getPower1() - 25);
         setTouchable(Touchable.enabled);
 
         angle = new Vector2(r, 0);
@@ -73,7 +73,7 @@ public class Player extends Entity {
         position.x = newx;
         position.y = newy;
 
-        ((GameScreen) game.getScreen()).centerCamera(position.x, position.y);
+        if (screen != null) screen.centerCamera(position.x, position.y);
 
         setX(position.x);
         setY(position.y);
@@ -186,22 +186,21 @@ public class Player extends Entity {
 
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
-            ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) (position.x + origin.x), (int) (position.y + 10), (int) angle, true,
-                game));
-            shotDelta = 0;
-            if (game.getScreen() instanceof GameScreen){
-                GameScreen screen = ((GameScreen) game.getScreen());
+            if (screen != null){
+                screen.background.addActor(new Shot(
+                    (int) (position.x + origin.x), (int) (position.y + 10), (int) angle, true,
+                    game));
+                shotDelta = 0;
                 screen.setPower1(screen.getPower1() - 1);
             }
         }
     }
 
     public void spawnAlly(float delta){
-        if(((GameScreen) game.getScreen()).getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  ((GameScreen)game.getScreen()).getPower1() >25){
+        if(screen != null && screen.getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  screen.getPower1() >25){
             allyCoolDown = 0 ;
-            ((GameScreen)game.getScreen()).setPower1(((GameScreen)game.getScreen()).getPower1() - 25);
-            ((AbstractScreen) game.getScreen()).getStage().addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Tex.BASE.width / 2) -212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
+            screen.setPower1(screen.getPower1() - 25);
+            screen.getStage().addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Tex.BASE.width / 2) -212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
         }
         else allyCoolDown += delta;
     }

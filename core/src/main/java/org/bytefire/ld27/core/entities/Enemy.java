@@ -89,7 +89,7 @@ public class Enemy extends Entity{
             velocity.y = (float) (((screen.getPlayer().getY() - getY()) / dist) * MAX_VELOCITY);
         }
         else velocity.x = MAX_VELOCITY;
-        
+
         if(position.x > ((AbstractScreen) game.getScreen()).getStage().getWidth() - Tex.BASE.width -212) {
             velocity.x = 0;
             shoot(delta, 270);
@@ -111,10 +111,12 @@ public class Enemy extends Entity{
 
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
-            ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, false,
-                game));
-            shotDelta = 0;
+            if (screen != null){
+                screen.background.addActor(new Shot(
+                    (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, false,
+                    game));
+                shotDelta = 0;
+            }
         }
     }
 
@@ -140,7 +142,7 @@ public class Enemy extends Entity{
     @Override
     public boolean remove(){
         if (getLife() > IMMUNITY) {
-            ((GameScreen) game.getScreen()).removeEnemy(this);
+            if (screen != null) screen.removeEnemy(this);
             return super.remove();
         }
         else return false;

@@ -19,11 +19,11 @@ public class Ally extends Entity{
 
     private static final float MAX_VELOCITY = 128F;
     private static final float FIRE_RATE = 0.75F;
-    
+
     private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
-    
+
     private float shotDelta;
     private boolean flipped;
 
@@ -31,24 +31,21 @@ public class Ally extends Entity{
         super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), new Rectangle(23, 0, 17, 28), game);
         tex = game.getTextureHandler().getRegion(Tex.PLAYER);
 
-        if (game.getScreen() instanceof GameScreen){
-            GameScreen screen = ((GameScreen) game.getScreen());
-            screen.setPower2(screen.getPower2() - 25);
-        }   
-
         if(game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
         else screen = null;
-        
+
+        if (screen != null) screen.setPower2(screen.getPower2() - 25);
+
         setTouchable(Touchable.enabled);
 
         setRotation(r);
 
         angle = new Vector2(r, 0);
-        
+
         shotDelta = 0;
-        
+
         //game.getSfxHandler().play(Sfx.SHOOT);
-        ((GameScreen)game.getScreen()).getAllies().add(this);
+        if (screen != null) screen.getAllies().add(this);
     }
 
     @Override
@@ -56,7 +53,7 @@ public class Ally extends Entity{
 
         seek(delta);
         calcAngle(delta);
-        
+
         if (velocity.x < 0 && !flipped){
             tex.flip(true, false);
             setDrawable(new TextureRegionDrawable(tex));
@@ -67,9 +64,9 @@ public class Ally extends Entity{
             setDrawable(new TextureRegionDrawable(tex));
             flipped = false;
         }
-        
+
         shotDelta += delta;
-        
+
         super.act(delta);
     }
 
@@ -98,7 +95,7 @@ public class Ally extends Entity{
             shoot(delta, mAngle);
         }
     }
-    
+
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
@@ -107,16 +104,16 @@ public class Ally extends Entity{
             shotDelta = 0;
         }
     }
-    
+
     @Override
     public boolean remove(){
         if (getLife() > IMMUNITY) {
-            ((GameScreen) game.getScreen()).removeAlly(this);
+            if (screen != null) screen.removeAlly(this);
             return super.remove();
         }
         else return false;
     }
-    
+
     public Entity findClosest(){
         Entity finalTarget = null;
         float targetX = 0;

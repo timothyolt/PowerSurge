@@ -87,9 +87,10 @@ public class EnemyHeavy extends Entity{
     public void draw(SpriteBatch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
         TextureRegion region = game.getSpriteHandler().getRegion(Sprite.HEAVY_ARM);
-        if(!flipped) region.flip(true, false);
-        else if(flipped && !outOfRange) region.flip(true, true);
-        else region.flip(true, false);
+        if(!flipped && outOfRange) region.flip(true, false);
+        else if(flipped && !outOfRange) region.flip(false, false);
+        else if (flipped && outOfRange) region.flip(false, false);
+        else if (!flipped && !outOfRange) region.flip(true, false);
         
         batch.draw(region,
             getX() + 12, getY() + 24,     //Position
@@ -129,11 +130,16 @@ public class EnemyHeavy extends Entity{
             //GDX angles have 0 up, not right
             if (target.position.x - position.x > 0) mAngle += 360 - 90 + angleModifier;
             else mAngle += 180 - 90 + angleModifier;
-            System.out.println(mAngle);
-            if((mAngle > 260 && mAngle < 310) || (mAngle > 80 && mAngle < 130)) shoot(delta, mAngle);
-            else if(flipped) mAngle = 90;
+            if((mAngle > 260 && mAngle < 310) || (mAngle > 80 && mAngle < 130)) {
+                outOfRange = false;
+                shoot(delta, mAngle);
+            }
+            else if(flipped) {
+                lastAngle = 90;
+                outOfRange = true;
+            }
             else {
-                mAngle = 270;
+                lastAngle = 270;
                 outOfRange = true;
             }
         }

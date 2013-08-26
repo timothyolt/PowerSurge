@@ -19,10 +19,10 @@ public class Base extends Entity {
 
     public void takeDamage(float damage){
         health -= damage;
-        if (health <= 0) game.setScreen(new EndScreen(player ? "GAME OVER, LOSER" : "YOUR PRIDE WILL BE YOUR DOWNFALL", game));
+        if (health <= 0) game.setScreen(new EndScreen(player ? "YOUR BASE WAS DESTROYED \n And thus, the rebels' base was destroyed" : "YOU WIN \n Your pride will be your downfall ", game));
         //System.out.println(health);
     }
-    
+
     public boolean getPlayerSide(){
         return player;
     }

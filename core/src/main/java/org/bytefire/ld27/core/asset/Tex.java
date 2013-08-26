@@ -10,6 +10,8 @@ public enum Tex {
     ENEMY(Gdx.files.internal("level.png"), 32, 32, 65),
     ARM(Gdx.files.internal("level.png"), 32, 32, 80),
     SHOT(Gdx.files.internal("level.png"), 16, 16, 384),
+    STARS(Gdx.files.internal("level.png"), 128, 128, 6),
+    STARS_ALT(Gdx.files.internal("level.png"), 128, 128, 7),
     MOON(Gdx.files.internal("level.png"), 128, 128, 2),
     MOON_ALT(Gdx.files.internal("level.png"), 128, 128, 3),
     BASE(Gdx.files.internal("level.png"), 256, 128, 0);

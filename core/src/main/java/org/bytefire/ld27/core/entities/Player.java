@@ -25,7 +25,7 @@ public class Player extends Entity {
     private static final float ANGUALR_POWER = 10F;
     private static final float FIRE_RATE = 0.5F;
     private static final float ALLY_SPAWN_TIME = 5;
-    
+
     private static final int MAX_ALLIES = 4;
 
     private final Vector2 angle;
@@ -39,11 +39,10 @@ public class Player extends Entity {
     public Player(int x, int y, int r, LD27 game){
         super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), new Rectangle(23, 0, 17, 28), game);
         tex = game.getTextureHandler().getRegion(Tex.PLAYER);
-        if (game.getScreen() instanceof GameScreen){
-            GameScreen screen = ((GameScreen) game.getScreen());
-            screen.setPower1(screen.getPower1() - 25);
-        }
+        if (game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
+        else screen = null;
 
+        if (screen != null) screen.setPower1(screen.getPower1() - 25);
         setTouchable(Touchable.enabled);
 
         angle = new Vector2(r, 0);
@@ -76,7 +75,7 @@ public class Player extends Entity {
         position.x = newx;
         position.y = newy;
 
-        ((GameScreen) game.getScreen()).centerCamera(position.x, position.y);
+        if (screen != null) screen.centerCamera(position.x, position.y);
 
         setX(position.x);
         setY(position.y);
@@ -100,7 +99,7 @@ public class Player extends Entity {
         allyCoolDown += delta;
         shotDelta += delta;
         life += delta;
-        
+
     }
 
     @Override
@@ -130,6 +129,7 @@ public class Player extends Entity {
 
     public float getAngleToMouse(){
         Vector2 mouse = ((AbstractScreen) game.getScreen()).getStage().screenToStageCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+        mouse.add(0, -16);
         float mAngle = (float) toDegrees(atan((mouse.y - position.y) / (mouse.x - position.x)));
         //GDX angles have 0 up, not right
         if (mouse.x - position.x > 0) mAngle += 360 - 90;
@@ -199,12 +199,12 @@ public class Player extends Entity {
             }
         }
     }
-    
+
     public void spawnAlly(float delta){
-        if(((GameScreen) game.getScreen()).getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  ((GameScreen)game.getScreen()).getPower1() >25){
+        if(screen != null && screen.getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  screen.getPower1() >25){
             allyCoolDown = 0 ;
-            ((GameScreen)game.getScreen()).setPower1(((GameScreen)game.getScreen()).getPower1() - 25);
-            ((AbstractScreen) game.getScreen()).getStage().addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Tex.BASE.width / 2) -212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
+            screen.setPower1(screen.getPower1() - 25);
+            screen.getStage().addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Tex.BASE.width / 2) -212, Tex.MOON.height + Tex.PLAYER.height, 0, game));
         }
         else allyCoolDown += delta;
     }

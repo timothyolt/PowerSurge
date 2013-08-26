@@ -72,7 +72,7 @@ public class Shot extends Entity {
         else if (hit != null && hit instanceof Player && bulletFrom == BulletFrom.ENEMY){
             if (((Entity) hit).getLife() > IMMUNITY){
                 hit.remove();
-                ((GameScreen)game.getScreen()).newPlayer(); 
+                ((GameScreen)game.getScreen()).addPlayer(); 
             }
             remove();
         }

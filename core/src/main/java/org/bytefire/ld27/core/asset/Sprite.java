@@ -17,7 +17,7 @@ public enum Sprite {
     STARS_ALT(Gdx.files.internal("level.png"), 128, 128, 7),
     MOON(Gdx.files.internal("level.png"), 128, 128, 2),
     MOON_ALT(Gdx.files.internal("level.png"), 128, 128, 3),
-    BASE(Gdx.files.internal("level.png"), 256, 128, 0);
+    BASE(Gdx.files.internal("level.png"), 176, 128, 0);
 
     public final FileHandle file;
     public final int width;

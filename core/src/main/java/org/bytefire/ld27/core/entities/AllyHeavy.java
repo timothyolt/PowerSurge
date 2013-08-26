@@ -34,8 +34,8 @@ public class AllyHeavy extends Entity{
     private boolean flipped;
 
     public AllyHeavy(int x, int y, int r, LD27 game){
-        super(x, y, game.getSpriteHandler().getRegion(Sprite.PLAYER), new Rectangle(23, 0, 17, 28), game);
-        tex = game.getSpriteHandler().getRegion(Sprite.PLAYER);
+        super(x, y, game.getSpriteHandler().getRegion(Sprite.ALLY_HEAVY), new Rectangle(23, 0, 17, 28), game);
+        tex = game.getSpriteHandler().getRegion(Sprite.ALLY_HEAVY);
 
         if(game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
         else screen = null;
@@ -86,8 +86,8 @@ public class AllyHeavy extends Entity{
     public void draw(SpriteBatch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
 
-        batch.draw(game.getSpriteHandler().getRegion(Sprite.ARM),
-            getX() + 1, getY() - 3,     //Position
+        batch.draw(game.getSpriteHandler().getRegion(Sprite.HEAVY_ARM),
+            getX() + 12, getY() + 24,     //Position
             16, 16,                     //Origin
             32, 32,                     //Width/Height
             1, 1,                       //Scale
@@ -112,7 +112,7 @@ public class AllyHeavy extends Entity{
         Entity target = findClosest();
         if(target != null && target.position.dst(position) <= Gdx.graphics.getWidth() * .75) {
             velocity.x /= 2;
-            long angleModifier = (random.nextInt() % 32) - 12;
+            long angleModifier = (random.nextInt() % 8) + 8;
             float mAngle = (float) toDegrees(atan((position.y - target.position.y) / (position.x - target.position.x)));
             //GDX angles have 0 up, not right
             if (target.position.x - position.x > 0) mAngle += 360 - 90 + angleModifier;
@@ -157,7 +157,7 @@ public class AllyHeavy extends Entity{
     }
     
     public void calcPower(float delta){
-        if(power > 30) remove();
+        if(power > 35) remove();
         else power += delta/2;
     }
 }

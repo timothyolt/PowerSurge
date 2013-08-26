@@ -59,6 +59,7 @@ public class Shot extends Entity {
         if (hit != null && (hit instanceof Enemy || hit instanceof EnemyHeavy) && bulletFrom == BulletFrom.PLAYER){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
             remove();
+            game.getAudioHandler().play(Audio.HIT);
             ((GameScreen)game.getScreen()).getPlayer().setPower(((GameScreen)game.getScreen()).getPlayer().getPower() - 1);
         }
         else if (hit != null && hit instanceof Base){
@@ -74,14 +75,17 @@ public class Shot extends Entity {
                 hit.remove();
                 ((GameScreen)game.getScreen()).addPlayer(); 
             }
+            game.getAudioHandler().play(Audio.HIT);
             remove();
         }
         else if (hit != null && (hit instanceof Ally || hit instanceof AllyHeavy) && bulletFrom == BulletFrom.ENEMY){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
+            game.getAudioHandler().play(Audio.HIT);
             remove();
         }
         else if (hit != null && (hit instanceof Enemy || hit instanceof EnemyHeavy) && bulletFrom == BulletFrom.ALLY){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
+            game.getAudioHandler().play(Audio.HIT);
             remove();
         }
 
@@ -91,6 +95,6 @@ public class Shot extends Entity {
         
         
         lifeDelta += delta;
-        if(lifeDelta > .7) remove();
+        if(lifeDelta > .5) remove();
     }
 }

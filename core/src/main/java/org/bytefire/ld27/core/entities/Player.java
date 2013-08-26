@@ -216,6 +216,7 @@ public class Player extends Entity {
     
     @Override
     public boolean remove(){
+        System.out.println(getLife());
         if (getLife() > IMMUNITY) {
             if (screen != null) {
                 ((AbstractScreen) game.getScreen()).getStage().addActor(new Head((int) (position.x + origin.x), (int) (position.y + origin.y), true, game));

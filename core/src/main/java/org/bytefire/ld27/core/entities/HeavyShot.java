@@ -59,6 +59,7 @@ public class HeavyShot extends Entity {
         if (hit != null && hit instanceof Enemy && bulletFrom == BulletFrom.PLAYER){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
             remove();
+            game.getAudioHandler().play(Audio.HIT);
             ((GameScreen)game.getScreen()).getPlayer().setPower(((GameScreen)game.getScreen()).getPlayer().getPower() - 1);
         }
         else if (hit != null && hit instanceof Base){
@@ -72,16 +73,19 @@ public class HeavyShot extends Entity {
         else if (hit != null && hit instanceof Player && bulletFrom == BulletFrom.ENEMY_HEAVY){
             if (((Entity) hit).getLife() > IMMUNITY){
                 hit.remove();
+                game.getAudioHandler().play(Audio.HIT);
                 ((GameScreen)game.getScreen()).addPlayer(); 
             }
             remove();
         }
         else if (hit != null && (hit instanceof Ally || hit instanceof AllyHeavy) && bulletFrom == BulletFrom.ENEMY_HEAVY){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
+            game.getAudioHandler().play(Audio.HIT);
             remove();
         }
         else if (hit != null && (hit instanceof Enemy || hit instanceof EnemyHeavy) && bulletFrom == BulletFrom.ALLY_HEAVY){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
+            game.getAudioHandler().play(Audio.HIT);
             remove();
         }
 

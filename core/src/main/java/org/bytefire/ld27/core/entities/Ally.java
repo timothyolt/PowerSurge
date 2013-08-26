@@ -110,7 +110,7 @@ public class Ally extends Entity{
 
     public void calcAngle(float delta){
         Entity target = findClosest();
-        if(target != null && target.position.dst(position) <= Gdx.graphics.getWidth()/2) {
+        if(target != null && target.position.dst(position) <= Gdx.graphics.getWidth() * .6) {
             long angleModifier = (random.nextInt() % 18) - 6;
             float mAngle = (float) toDegrees(atan((position.y - target.position.y) / (position.x - target.position.x)));
             //GDX angles have 0 up, not right

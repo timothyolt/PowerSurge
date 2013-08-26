@@ -1,6 +1,7 @@
 package org.bytefire.ld27.core.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -152,8 +153,9 @@ public class GameScreen extends AbstractScreen {
         if (y > stage.getHeight() - (WINDOW_HEIGHT / 2)) cam.position.y = stage.getHeight() - (WINDOW_HEIGHT / 2);
         else cam.position.y = y;
 
-        starfield.setX((cam.position.x * STARFIELD_SCALE) - (Tex.STARS.width * 2));
-        starfield.setY((cam.position.y * STARFIELD_SCALE) - (Tex.STARS.height * 2));
+        starfield.setX((cam.position.x * STARFIELD_SCALE) - (Tex.STARS.width * STARFIELD_PADDING / 2));
+        starfield.setY((cam.position.y * STARFIELD_SCALE) - (Tex.STARS.height * STARFIELD_PADDING / 2));
+
         cam.update();
     }
 
@@ -202,6 +204,13 @@ public class GameScreen extends AbstractScreen {
             moon.setX(i * Tex.MOON.width);
             moon.setY(0);
             background.addActor(moon);
+
+            Image dark;
+            dark = new Image(game.getTextureHandler().getRegion(Tex.MOON));
+            dark.setColor(Color.BLACK);
+            dark.setX(i * Tex.MOON.width);
+            dark.setY(-1 * Tex.MOON.width);
+            background.addActor(dark);
         }
     }
 

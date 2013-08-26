@@ -7,12 +7,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
 import org.bytefire.ld27.core.screen.AbstractScreen;
+import org.bytefire.ld27.core.screen.GameScreen;
 
 public abstract class Entity extends Image{
 
     protected static final float GRAVITATIONAL_ACCELERATION = 128F;
     protected static final float MAX_GRAVITY = 256F;
-    private static final float IMMUNITY = 3;
+    protected static final float IMMUNITY = 3;
 
     protected final LD27 game;
     protected final Rectangle bound;
@@ -32,7 +33,7 @@ public abstract class Entity extends Image{
         super.setOrigin(getWidth()/2, getHeight()/2);
         setX(x);
         setY(y);
-
+        
         origin = new Vector2(getWidth()/2, getHeight()/2);
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
@@ -101,27 +102,27 @@ public abstract class Entity extends Image{
         return origin;
     }
 
-    @Override
-     public void setOriginX(float x) {
-        super.setOriginX(x);
-        origin.x = x;
-     }
-
-     @Override
-     public void setOriginY(float y) {
-        super.setOriginY(y);
-        origin.y = y;
-     }
-
-     @Override
-     public void setOrigin(float x, float y) {
-        super.setOrigin(x, y);
-        origin.x = x;
-        origin.y = y;
-     }
+//    @Override
+//     public void setOriginX(float x) {
+//        super.setOriginX(x);
+//        origin.x = x;
+//     }
+//
+//     @Override
+//     public void setOriginY(float y) {
+//        super.setOriginY(y);
+//        origin.y = y;
+//     }
+//
+//     @Override
+//     public void setOrigin(float x, float y) {
+//        super.setOrigin(x, y);
+//        origin.x = x;
+//        origin.y = y;
+//     }
     
     public float getLife(){
         return life;
     }
-
+    
 }

@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import java.util.ArrayList;
 import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.entities.Ally;
 import org.bytefire.ld27.core.entities.Base;
 import org.bytefire.ld27.core.entities.Enemy;
 import org.bytefire.ld27.core.entities.Player;
@@ -19,12 +21,15 @@ public class GameScreen extends AbstractScreen {
     private static final int WINDOW_WIDTH = 854;
     private static final int WINDOW_HEIGHT = 480;
     
-    private static final int MAX_ENEMIES = 5;
-
+    private static final int POWER_RATE = 3;
+    private static final int MAX_ENEMIES = 10;
+    private static final float RESPAWN_TIME = 10;
+    
     private final Random rand;
 
-    private int enemyCount;
-    private int coolDownTime;
+    private float coolDownTime;
+    private ArrayList<Enemy> enemyList;
+    private ArrayList<Ally> allyList;
     
     private float power1;
     private float power2;
@@ -35,6 +40,8 @@ public class GameScreen extends AbstractScreen {
 
     public GameScreen(LD27 game){
         super(game);
+        enemyList = new ArrayList<Enemy>();
+        allyList = new ArrayList<Ally>();
         player = null;
         rand = new Random(System.nanoTime());
         power1 = 1000;
@@ -47,14 +54,15 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void render(float delta){
         super.render(delta);
-        coolDownTime += delta;
         hud.begin();
         hudFont.setColor(0.5F, 0.5F, 1F, 1F);
         hudFont.draw(hud, "Power: " + Float.toString(power2), 64, 64);
         hudFont.draw(hud, "Power: " + Float.toString(power1), Gdx.graphics.getWidth() - 164, 64);
         hud.end();
         
-        addEnemy(coolDownTime);
+        power1 += delta * POWER_RATE;
+        power2 += delta * POWER_RATE;
+        addEnemy(delta);
     }
 
     @Override
@@ -86,20 +94,26 @@ public class GameScreen extends AbstractScreen {
     }
     
     public void newPlayer(){
-        player = new Player((int)stage.getWidth() - Tex.PLAYER.width, 130, 0, game);
+        player = new Player((int)stage.getWidth() - (Tex.BASE.width / 2), Tex.MOON.height + Tex.PLAYER.height, 0, game);
         stage.addActor(player);
     }
     
     public void addEnemy(float delta){
-        if(enemyCount < MAX_ENEMIES && delta > 10){
+        if(getEnemies().size() < MAX_ENEMIES && coolDownTime > RESPAWN_TIME && power2 > 25){
             coolDownTime = 0;
-            enemyCount++;
-            stage.addActor(new Enemy(0 + Tex.PLAYER.width, 100, 0, game));
+            stage.addActor(new Enemy(Tex.BASE.width / 2, Tex.MOON.height + Tex.PLAYER.height, 0, game));
         }
-        else coolDownTime += delta;
+        else 
+        coolDownTime += delta;
     }
     
+    public void removeEnemy(Enemy enemy){
+        getEnemies().remove(enemy);
+    }
     
+    public void removeAlly(Ally ally){
+        getAllies().remove(ally);
+    }    
 
     public OrthographicCamera getCamera(){
         return cam;
@@ -156,4 +170,13 @@ public class GameScreen extends AbstractScreen {
     public void dispose(){
         hud.dispose();
     }
+    
+    public ArrayList getEnemies(){
+        return enemyList;
+    }
+    
+    public ArrayList getAllies(){
+        return allyList;
+    }
+
 }

@@ -23,10 +23,14 @@ public class Player extends Entity {
     private static final float FRICTION = 16F;
     private static final float ANGUALR_POWER = 10F;
     private static final float FIRE_RATE = 0.5F;
+    private static final float ALLY_SPAWN_TIME = 5;
+    
+    private static final int MAX_ALLIES = 4;
 
     private final Vector2 angle;
     private final TextureRegion tex;
-
+    
+    private float allyCoolDown;
     private float shotDelta;
     private boolean flipped;
 
@@ -42,13 +46,13 @@ public class Player extends Entity {
 
         angle = new Vector2(r, 0);
 
+        allyCoolDown = 0;
         shotDelta = 0;
         flipped = false;
     }
 
     @Override
     public void act(float delta){
-
 
         calcVelocity(delta);
         calcAngle(delta);
@@ -86,8 +90,12 @@ public class Player extends Entity {
             flipped = false;
         }
 
+        if(Gdx.input.isKeyPressed(Z)) spawnAlly(delta);
 
+        allyCoolDown += delta;
         shotDelta += delta;
+        life += delta;
+        
     }
 
     public void calcVelocity(float delta){
@@ -169,6 +177,15 @@ public class Player extends Entity {
                 screen.setPower1(screen.getPower1() - 1);
             }
         }
+    }
+    
+    public void spawnAlly(float delta){
+        if(((GameScreen) game.getScreen()).getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  ((GameScreen)game.getScreen()).getPower1() >25){
+            allyCoolDown = 0 ;
+            ((GameScreen)game.getScreen()).setPower1(((GameScreen)game.getScreen()).getPower1() - 25);
+            ((AbstractScreen) game.getScreen()).getStage().addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Tex.BASE.width / 2), Tex.MOON.height + Tex.PLAYER.height, 0, game));
+        }
+        else allyCoolDown += delta;
     }
 
 }

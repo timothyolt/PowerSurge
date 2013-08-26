@@ -8,6 +8,7 @@ import org.bytefire.ld27.core.LD27;
 import static java.lang.Math.*;
 import org.bytefire.ld27.core.asset.Sfx;
 import org.bytefire.ld27.core.asset.Tex;
+import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 import org.bytefire.ld27.core.screen.GameScreen;
 
@@ -54,16 +55,22 @@ public class Shot extends Entity {
 
         Actor hit = ((AbstractScreen)game.getScreen()).getStage().hit(getX(), getY(), true);
         if (hit != null && hit instanceof Enemy && teamPlayer == true){
-            hit.remove();
+            if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
             remove();
         }
-        else if (hit != null && hit instanceof Base){
+        else if (hit != null && hit instanceof Base && ((Base) hit).getPlayerSide() != teamPlayer){
             ((Base) hit).takeDamage(5);
             remove();
         }
         else if (hit != null && hit instanceof Player && teamPlayer == false){
-            ((GameScreen)game.getScreen()).newPlayer();
-            hit.remove();
+            if (((Entity) hit).getLife() > IMMUNITY){
+                hit.remove();
+                ((GameScreen)game.getScreen()).newPlayer(); 
+            }
+            remove();
+        }
+        else if (hit != null && hit instanceof Ally && teamPlayer == false){
+            if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
             remove();
         }
 

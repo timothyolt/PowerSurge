@@ -28,11 +28,11 @@ public class GameScreen extends AbstractScreen {
     private static final float STARFIELD_SCALE = 0.5F;
     private static final int STARFIELD_PADDING = 4;
 
-    private static final int POWER_RATE = 7;
+    private static final int POWER_RATE = 10;
     private static final int MAX_ENEMIES = 10;
     private static final float RESPAWN_TIME = 4;
     private static final float ENEMY_HEAVY_RESPAWN_TIME = 6;
-    private static final float RESPAWN_CHANCE = 5;
+    private static final float RESPAWN_CHANCE = 7;
     private static final int MAX_ALLIES = 4;
     private static final int ALLY_SPAWN_TIME = 3;
 

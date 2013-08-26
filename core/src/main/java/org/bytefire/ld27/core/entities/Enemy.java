@@ -118,7 +118,7 @@ public class Enemy extends Entity{
     public void calcAngle(float delta){
         Entity target = findClosest();
         if(target == null) target = screen.getPlayer();
-        if(target.position.dst(position) <= Gdx.graphics.getWidth()/2) {
+        if(target.position.dst(position) <= Gdx.graphics.getWidth() * .6) {
             long angleModifier = 0;
             if(position.y > 128) angleModifier = (random.nextInt() % 32) - 16;
             else angleModifier = (random.nextInt() % 18) - 6;

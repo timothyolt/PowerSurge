@@ -32,10 +32,11 @@ public class EnemyHeavy extends Entity{
     private float power;
     private float shotDelta;
     private boolean flipped;
-
+    private boolean outOfRange;
+    
     public EnemyHeavy(int x, int y, int r, LD27 game){
-        super(x, y, game.getSpriteHandler().getRegion(Sprite.PLAYER), new Rectangle(23, 0, 17, 28), game);
-        tex = game.getSpriteHandler().getRegion(Sprite.PLAYER);
+        super(x, y, game.getSpriteHandler().getRegion(Sprite.ENEMY_HEAVY), new Rectangle(23, 0, 17, 28), game);
+        tex = game.getSpriteHandler().getRegion(Sprite.ENEMY_HEAVY);
 
         if(game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
         else screen = null;
@@ -85,9 +86,13 @@ public class EnemyHeavy extends Entity{
     @Override
     public void draw(SpriteBatch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
-
-        batch.draw(game.getSpriteHandler().getRegion(Sprite.ARM),
-            getX() + 1, getY() - 3,     //Position
+        TextureRegion region = game.getSpriteHandler().getRegion(Sprite.HEAVY_ARM);
+        if(!flipped) region.flip(true, false);
+        else if(flipped && !outOfRange) region.flip(true, true);
+        else region.flip(true, false);
+        
+        batch.draw(region,
+            getX() + 12, getY() + 24,     //Position
             16, 16,                     //Origin
             32, 32,                     //Width/Height
             1, 1,                       //Scale
@@ -115,17 +120,22 @@ public class EnemyHeavy extends Entity{
     }
 
     public void calcAngle(float delta){
+        outOfRange = false;
         Entity target = findClosest();
         if(target == null) target = screen.getPlayer();
         if(target.position.dst(position) <= Gdx.graphics.getWidth()/2) {
-            long angleModifier = 0;
-            if(position.y > 128) angleModifier = (random.nextInt() % 32) - 16;
-            else angleModifier = (random.nextInt() % 18) - 6;
+            long angleModifier = (random.nextInt() % 8) + 8;
             float mAngle = (float) toDegrees(atan((position.y - target.position.y) / (position.x - target.position.x)));
             //GDX angles have 0 up, not right
             if (target.position.x - position.x > 0) mAngle += 360 - 90 + angleModifier;
             else mAngle += 180 - 90 + angleModifier;
-            shoot(delta, mAngle);
+            System.out.println(mAngle);
+            if((mAngle > 260 && mAngle < 310) || (mAngle > 80 && mAngle < 130)) shoot(delta, mAngle);
+            else if(flipped) mAngle = 90;
+            else {
+                mAngle = 270;
+                outOfRange = true;
+            }
         }
     }
 
@@ -171,7 +181,7 @@ public class EnemyHeavy extends Entity{
     }
     
     public void calcPower(float delta){
-        if(power > 30) remove();
+        if(power > 35) remove();
         else power += delta/2;
     }
 }

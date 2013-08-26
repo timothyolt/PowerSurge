@@ -31,7 +31,7 @@ public class Player extends Entity {
     private boolean flipped;
 
     public Player(int x, int y, int r, LD27 game){
-        super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), new Rectangle(23, 4, 17, 28), game);
+        super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), new Rectangle(23, 0, 17, 28), game);
         tex = game.getTextureHandler().getRegion(Tex.PLAYER);
         if (game.getScreen() instanceof GameScreen){
             GameScreen screen = ((GameScreen) game.getScreen());
@@ -39,7 +39,6 @@ public class Player extends Entity {
         }
 
         setTouchable(Touchable.enabled);
-        setOrigin(32, 16);
 
         angle = new Vector2(r, 0);
 
@@ -162,7 +161,7 @@ public class Player extends Entity {
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, true, 
+                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, true,
                 game));
             shotDelta = 0;
             if (game.getScreen() instanceof GameScreen){

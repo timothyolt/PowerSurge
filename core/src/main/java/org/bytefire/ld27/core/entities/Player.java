@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Rectangle;
 import static org.bytefire.ld27.core.entities.Entity.GRAVITATIONAL_ACCELERATION;
 import static java.lang.Math.*;
 import org.bytefire.ld27.core.asset.Audio;
+import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
 
 public class Player extends Entity {
 
@@ -28,14 +29,10 @@ public class Player extends Entity {
     private static final float ALLY_SPAWN_TIME = 5;
     private static final float FLY_SFX_LENGTH = 2.887F;
 
-    private static final int MAX_ALLIES = 4;
-
+    private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
-    private final GameScreen screen;
-
     private float power;
-    private float allyCoolDown;
     private float shotDelta;
     private float flyDelta;
     private boolean flyLooping;
@@ -53,7 +50,6 @@ public class Player extends Entity {
         angle = new Vector2(r, 0);
 
         power = 0;
-        allyCoolDown = 0;
         shotDelta = 0;
         flyDelta = 0;
         flyLooping = false;
@@ -100,10 +96,10 @@ public class Player extends Entity {
             flipped = false;
         }
 
-        if(Gdx.input.isKeyPressed(Z)) spawnAlly(delta);
+        if(Gdx.input.isKeyPressed(Z)) screen.spawnAlly(delta);
+        if(Gdx.input.isKeyPressed(X)) screen.spawnAllyHeavy(delta);
 
         power += delta / 2;
-        allyCoolDown += delta;
         shotDelta += delta;
         life += delta;
 
@@ -217,16 +213,18 @@ public class Player extends Entity {
             }
         }
     }
-
-    public void spawnAlly(float delta){
-        if(screen != null && screen.getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  screen.getPower1() >25){
-            allyCoolDown = 0 ;
-            screen.setPower1(screen.getPower1() - 25);
-            screen.getStage().addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Sprite.BASE.width / 2) -212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
+    
+    @Override
+    public boolean remove(){
+        if (getLife() > IMMUNITY) {
+            if (screen != null) {
+                ((AbstractScreen) game.getScreen()).getStage().addActor(new Head((int) (position.x + origin.x), (int) (position.y + origin.y), true, game));
+            }
+            return super.remove();
         }
-        else allyCoolDown += delta;
+        else return false;
     }
-
+    
     public void calcPower(float delta){
         if(power > 10) {
             remove();

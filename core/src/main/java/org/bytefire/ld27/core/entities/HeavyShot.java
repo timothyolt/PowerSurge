@@ -12,19 +12,19 @@ import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 import org.bytefire.ld27.core.screen.GameScreen;
 
-public class Shot extends Entity {
+public class HeavyShot extends Entity {
 
     private static final float MAX_VELOCITY = 1024;
     
     private float lifeDelta;
 
-    enum BulletFrom{ PLAYER, ALLY, ENEMY};
+    enum BulletFrom{ PLAYER, ALLY_HEAVY, ENEMY_HEAVY };
     BulletFrom bulletFrom = null;
     
     private final Vector2 angle;
     
-    public Shot(int x, int y, int r, BulletFrom bulletFrom, LD27 game){
-        super(x, y, game.getSpriteHandler().getRegion(Sprite.SHOT), game);
+    public HeavyShot(int x, int y, int r, BulletFrom bulletFrom, LD27 game){
+        super(x, y, game.getSpriteHandler().getRegion(Sprite.HEAVY_SHOT), game);
 
         setTouchable(Touchable.disabled);
 
@@ -56,31 +56,31 @@ public class Shot extends Entity {
         setY(position.y);
 
         Actor hit = ((AbstractScreen)game.getScreen()).getStage().hit(getX(), getY(), true);
-        if (hit != null && (hit instanceof Enemy || hit instanceof EnemyHeavy) && bulletFrom == BulletFrom.PLAYER){
+        if (hit != null && hit instanceof Enemy && bulletFrom == BulletFrom.PLAYER){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
             remove();
             ((GameScreen)game.getScreen()).getPlayer().setPower(((GameScreen)game.getScreen()).getPlayer().getPower() - 1);
         }
         else if (hit != null && hit instanceof Base){
-            if ((((Base) hit).getPlayerSide() == false && (bulletFrom == BulletFrom.PLAYER  || bulletFrom == BulletFrom.ALLY)) ||
-                 ((Base) hit).getPlayerSide() == true && bulletFrom == BulletFrom.ENEMY){
+            if ((((Base) hit).getPlayerSide() == false && (bulletFrom == BulletFrom.PLAYER  || bulletFrom == BulletFrom.ALLY_HEAVY)) ||
+                 ((Base) hit).getPlayerSide() == true && bulletFrom == BulletFrom.ENEMY_HEAVY){
                 
                 ((Base) hit).takeDamage(5);
                 remove();
             }
         }
-        else if (hit != null && hit instanceof Player && bulletFrom == BulletFrom.ENEMY){
+        else if (hit != null && hit instanceof Player && bulletFrom == BulletFrom.ENEMY_HEAVY){
             if (((Entity) hit).getLife() > IMMUNITY){
                 hit.remove();
                 ((GameScreen)game.getScreen()).addPlayer(); 
             }
             remove();
         }
-        else if (hit != null && (hit instanceof Ally || hit instanceof AllyHeavy) && bulletFrom == BulletFrom.ENEMY){
+        else if (hit != null && (hit instanceof Ally || hit instanceof AllyHeavy) && bulletFrom == BulletFrom.ENEMY_HEAVY){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
             remove();
         }
-        else if (hit != null && (hit instanceof Enemy || hit instanceof EnemyHeavy) && bulletFrom == BulletFrom.ALLY){
+        else if (hit != null && (hit instanceof Enemy || hit instanceof EnemyHeavy) && bulletFrom == BulletFrom.ALLY_HEAVY){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
             remove();
         }
@@ -91,6 +91,6 @@ public class Shot extends Entity {
         
         
         lifeDelta += delta;
-        if(lifeDelta > .7) remove();
+        if(lifeDelta > 1) remove();
     }
 }

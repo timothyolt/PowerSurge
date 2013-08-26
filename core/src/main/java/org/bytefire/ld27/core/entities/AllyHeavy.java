@@ -12,60 +12,59 @@ import static java.lang.Math.toDegrees;
 import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Sprite;
+import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 
 import org.bytefire.ld27.core.screen.GameScreen;
 
-public class Enemy extends Entity{
+public class AllyHeavy extends Entity{
 
-    private static final float MAX_VELOCITY = 192F;
-    private static final float FIRE_RATE = .75F;
-
-    private final Random random;
+    private static final float MAX_VELOCITY = 112F;
+    private static final float FIRE_RATE = .5F;
 
     private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
-
+    
+    Random random;
+    
     private float lastAngle;
     private float power;
     private float shotDelta;
     private boolean flipped;
 
-    public Enemy(int x, int y, int r, LD27 game){
-        super(x, y, game.getSpriteHandler().getRegion(Sprite.ENEMY), new Rectangle(23, 0, 17, 28), game);
-        tex = game.getSpriteHandler().getRegion(Sprite.ENEMY);
+    public AllyHeavy(int x, int y, int r, LD27 game){
+        super(x, y, game.getSpriteHandler().getRegion(Sprite.PLAYER), new Rectangle(23, 0, 17, 28), game);
+        tex = game.getSpriteHandler().getRegion(Sprite.PLAYER);
 
         if(game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
         else screen = null;
 
-
-        if (screen != null) screen.setPower2(screen.getPower2() - 25);
-
-        random = new Random();
+        if (screen != null) screen.setPower1(screen.getPower1() - 50);
 
         setTouchable(Touchable.enabled);
 
         setRotation(r);
+        
+        random = new Random();
 
         angle = new Vector2(r, 0);
-
-        lastAngle = 270;
+        
+        lastAngle = 90;
         power = 0;
         shotDelta = 0;
 
-        //game.getAudioHandler().play(Sfx.SHOOT);
-        if (screen != null) screen.getEnemies().add(this);
-
+        //game.getSfxHandler().play(Sfx.SHOOT);
+        if (screen != null) screen.getAllyHeavies().add(this);
     }
 
     @Override
     public void act(float delta){
-
+        
         seek(delta);
         calcAngle(delta);
         calcPower(delta);
-
+        
         if (velocity.x < 0 && !flipped){
             tex.flip(true, false);
             setDrawable(new TextureRegionDrawable(tex));
@@ -82,26 +81,6 @@ public class Enemy extends Entity{
         
         super.act(delta);
     }
-
-    public void seek(float delta){
-        Entity target = findClosest();
-        if(target != null && target.position.dst(position) <= Gdx.graphics.getWidth()/2){
-            float dist = target.position.dst(position);
-            velocity.x = (float) (((target.getX() - getX()) / dist) * MAX_VELOCITY);
-            velocity.y = (float) (((target.getY() - getY()) / dist) * MAX_VELOCITY);
-        }
-        else if(screen.getPlayer().position.dst(position) <= Gdx.graphics.getWidth()/2){
-            float dist = screen.getPlayer().position.dst(position);
-            velocity.x = (float) (((screen.getPlayer().getX() - getX()) / dist) * MAX_VELOCITY);
-            velocity.y = (float) (((screen.getPlayer().getY() - getY()) / dist) * MAX_VELOCITY);
-        }
-        else velocity.x = MAX_VELOCITY;
-
-        if(position.x > screen.getStage().getWidth() - Sprite.BASE.width -212) {
-            velocity.x = 0;
-            shoot(delta, 270);
-        }
-    }
     
     @Override
     public void draw(SpriteBatch batch, float parentAlpha){
@@ -115,13 +94,25 @@ public class Enemy extends Entity{
             lastAngle);         //Rotation
     }
 
+    public void seek(float delta){
+        Entity target = findClosest();
+        if(target != null && target.position.dst(position) <= Gdx.graphics.getWidth()/2){
+            float dist = target.position.dst(position);
+            velocity.x = (float) (((target.getX() - getX()) / dist) * MAX_VELOCITY);
+            velocity.y = (float) (((target.getY() - getY()) / dist) * MAX_VELOCITY);
+        }
+        else velocity.x = -MAX_VELOCITY;
+        if(position.x < Sprite.BASE.width + 212) {
+            velocity.x = 0;
+            shoot(delta, 90);
+        }
+    }
+
     public void calcAngle(float delta){
         Entity target = findClosest();
-        if(target == null) target = screen.getPlayer();
-        if(target.position.dst(position) <= Gdx.graphics.getWidth()/2) {
-            long angleModifier = 0;
-            if(position.y > 128) angleModifier = (random.nextInt() % 32) - 16;
-            else angleModifier = (random.nextInt() % 18) - 6;
+        if(target != null && target.position.dst(position) <= Gdx.graphics.getWidth() * .75) {
+            velocity.x /= 2;
+            long angleModifier = (random.nextInt() % 32) - 12;
             float mAngle = (float) toDegrees(atan((position.y - target.position.y) / (position.x - target.position.x)));
             //GDX angles have 0 up, not right
             if (target.position.x - position.x > 0) mAngle += 360 - 90 + angleModifier;
@@ -133,46 +124,40 @@ public class Enemy extends Entity{
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             lastAngle = angle;
-            ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, Shot.BulletFrom.ENEMY,
+            screen.midground.addActor(new HeavyShot(
+                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, HeavyShot.BulletFrom.ALLY_HEAVY,
                 game));
             shotDelta = 0;
         }
-    }
-
-    public Entity findClosest(){
-        Entity finalTarget = null;
-        float targetX = 9001;
-        if(screen != null) for(int i = 0; i < screen.getAllies().size(); i++){
-            Ally target = (Ally) screen.getAllies().get(i);
-            if(target.getX() < targetX){
-                targetX = target.getX();
-                finalTarget = target;
-            }
-            if(screen.getPlayer().getX() < targetX){
-                targetX = screen.getPlayer().getX();
-                finalTarget = screen.getPlayer();
-            }
-
-        }
-
-        return finalTarget;
     }
 
     @Override
     public boolean remove(){
         if (getLife() > IMMUNITY) {
             if (screen != null) {
-                screen.removeEnemy(this);
-                ((AbstractScreen) game.getScreen()).getStage().addActor(new Head((int) (position.x + origin.x), (int) (position.y + origin.y), false, game));
+                screen.removeAllyHeavy(this);
+                ((AbstractScreen) game.getScreen()).getStage().addActor(new Head((int) (position.x + origin.x), (int) (position.y + origin.y), true, game));
             }
             return super.remove();
         }
         else return false;
     }
+
+    public Entity findClosest(){
+        Entity finalTarget = null;
+        float targetX = 0;
+        if(screen != null) for(int i = 0; i < screen.getEnemies().size(); i++){
+            Enemy target = (Enemy) screen.getEnemies().get(i);
+            if(target.getX() > targetX){
+                targetX = target.getX();
+                finalTarget = target;
+            }
+        }
+        return finalTarget;
+    }
     
     public void calcPower(float delta){
-        if(power > 25) remove();
+        if(power > 30) remove();
         else power += delta/2;
     }
 }

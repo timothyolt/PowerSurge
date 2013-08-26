@@ -12,60 +12,59 @@ import static java.lang.Math.toDegrees;
 import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Sprite;
+import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 
 import org.bytefire.ld27.core.screen.GameScreen;
 
-public class Enemy extends Entity{
+public class EnemyHeavy extends Entity{
 
-    private static final float MAX_VELOCITY = 192F;
-    private static final float FIRE_RATE = .75F;
-
-    private final Random random;
+    private static final float MAX_VELOCITY = 112F;
+    private static final float FIRE_RATE = 1F;
 
     private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
-
+    
+    Random random;
+    
     private float lastAngle;
     private float power;
     private float shotDelta;
     private boolean flipped;
 
-    public Enemy(int x, int y, int r, LD27 game){
-        super(x, y, game.getSpriteHandler().getRegion(Sprite.ENEMY), new Rectangle(23, 0, 17, 28), game);
-        tex = game.getSpriteHandler().getRegion(Sprite.ENEMY);
+    public EnemyHeavy(int x, int y, int r, LD27 game){
+        super(x, y, game.getSpriteHandler().getRegion(Sprite.PLAYER), new Rectangle(23, 0, 17, 28), game);
+        tex = game.getSpriteHandler().getRegion(Sprite.PLAYER);
 
         if(game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
         else screen = null;
 
-
-        if (screen != null) screen.setPower2(screen.getPower2() - 25);
-
-        random = new Random();
+        if (screen != null) screen.setPower2(screen.getPower2() - 50);
 
         setTouchable(Touchable.enabled);
+        
+        random = new Random();
 
         setRotation(r);
 
         angle = new Vector2(r, 0);
-
-        lastAngle = 270;
+        
+        lastAngle = 90;
         power = 0;
         shotDelta = 0;
 
-        //game.getAudioHandler().play(Sfx.SHOOT);
-        if (screen != null) screen.getEnemies().add(this);
-
+        //game.getSfxHandler().play(Sfx.SHOOT);
+        if (screen != null) screen.getEnemyHeavies().add(this);
     }
 
     @Override
     public void act(float delta){
-
+        
         seek(delta);
         calcAngle(delta);
         calcPower(delta);
-
+        
         if (velocity.x < 0 && !flipped){
             tex.flip(true, false);
             setDrawable(new TextureRegionDrawable(tex));
@@ -81,6 +80,18 @@ public class Enemy extends Entity{
         power += delta;
         
         super.act(delta);
+    }
+    
+    @Override
+    public void draw(SpriteBatch batch, float parentAlpha){
+        super.draw(batch, parentAlpha);
+
+        batch.draw(game.getSpriteHandler().getRegion(Sprite.ARM),
+            getX() + 1, getY() - 3,     //Position
+            16, 16,                     //Origin
+            32, 32,                     //Width/Height
+            1, 1,                       //Scale
+            lastAngle);         //Rotation
     }
 
     public void seek(float delta){
@@ -102,18 +113,6 @@ public class Enemy extends Entity{
             shoot(delta, 270);
         }
     }
-    
-    @Override
-    public void draw(SpriteBatch batch, float parentAlpha){
-        super.draw(batch, parentAlpha);
-
-        batch.draw(game.getSpriteHandler().getRegion(Sprite.ARM),
-            getX() + 1, getY() - 3,     //Position
-            16, 16,                     //Origin
-            32, 32,                     //Width/Height
-            1, 1,                       //Scale
-            lastAngle);         //Rotation
-    }
 
     public void calcAngle(float delta){
         Entity target = findClosest();
@@ -133,11 +132,23 @@ public class Enemy extends Entity{
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             lastAngle = angle;
-            ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, Shot.BulletFrom.ENEMY,
+            screen.midground.addActor(new HeavyShot(
+                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, HeavyShot.BulletFrom.ENEMY_HEAVY,
                 game));
             shotDelta = 0;
         }
+    }
+
+    @Override
+    public boolean remove(){
+        if (getLife() > IMMUNITY) {
+            if (screen != null) {
+                screen.removeEnemyHeavy(this);
+                ((AbstractScreen) game.getScreen()).getStage().addActor(new Head((int) (position.x + origin.x), (int) (position.y + origin.y), false, game));
+            }
+            return super.remove();
+        }
+        else return false;
     }
 
     public Entity findClosest(){
@@ -158,21 +169,9 @@ public class Enemy extends Entity{
 
         return finalTarget;
     }
-
-    @Override
-    public boolean remove(){
-        if (getLife() > IMMUNITY) {
-            if (screen != null) {
-                screen.removeEnemy(this);
-                ((AbstractScreen) game.getScreen()).getStage().addActor(new Head((int) (position.x + origin.x), (int) (position.y + origin.y), false, game));
-            }
-            return super.remove();
-        }
-        else return false;
-    }
     
     public void calcPower(float delta){
-        if(power > 25) remove();
+        if(power > 30) remove();
         else power += delta/2;
     }
 }

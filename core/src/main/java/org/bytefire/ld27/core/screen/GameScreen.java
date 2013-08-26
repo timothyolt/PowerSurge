@@ -12,6 +12,8 @@ import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Sprite;
 import org.bytefire.ld27.core.entities.Ally;
+import org.bytefire.ld27.core.entities.AllyHeavy;
+import org.bytefire.ld27.core.entities.EnemyHeavy;
 import org.bytefire.ld27.core.entities.Base;
 import org.bytefire.ld27.core.entities.Enemy;
 import org.bytefire.ld27.core.entities.Player;
@@ -25,17 +27,25 @@ public class GameScreen extends AbstractScreen {
     private static final float STARFIELD_SCALE = 0.5F;
     private static final int STARFIELD_PADDING = 4;
 
-    private static final int POWER_RATE = 3;
+    private static final int POWER_RATE = 7;
     private static final int MAX_ENEMIES = 10;
     private static final float RESPAWN_TIME = 4;
+    private static final float ENEMY_HEAVY_RESPAWN_TIME = 6;
     private static final float RESPAWN_CHANCE = 5;
+    private static final int MAX_ALLIES = 4;
+    private static final int ALLY_SPAWN_TIME = 3;
 
     private final Random rand;
     private final Group starfield;
 
+    private float allyCoolDown;
     private float coolDownTime;
+    private float enemyHeavyCoolDownTime;
     private ArrayList<Enemy> enemyList;
     private ArrayList<Ally> allyList;
+    private ArrayList<AllyHeavy> allyHeavyList;
+    private ArrayList<EnemyHeavy> enemyHeavyList;
+    
     private float power1;
     private float power2;
     private Player player;
@@ -51,6 +61,8 @@ public class GameScreen extends AbstractScreen {
         super(game);
         enemyList = new ArrayList<Enemy>();
         allyList = new ArrayList<Ally>();
+        enemyHeavyList = new ArrayList<EnemyHeavy>();
+        allyHeavyList = new ArrayList<AllyHeavy>();
         player = null;
         rand = new Random(System.nanoTime());
         power1 = 1000;
@@ -58,6 +70,8 @@ public class GameScreen extends AbstractScreen {
         hud = new SpriteBatch();
         hudFont = new BitmapFont();
         coolDownTime = 0;
+        allyCoolDown = 0;
+        enemyHeavyCoolDownTime = 0;
 
         background = new Group();
         midground = new Group();
@@ -72,11 +86,14 @@ public class GameScreen extends AbstractScreen {
         hud.begin();
         hudFont.setColor(0.5F, 0.5F, 1F, 1F);
         hudFont.draw(hud, "Power: " + Float.toString(power2), 64, 64);
-        hudFont.draw(hud, "Power: " + Float.toString(power1), WINDOW_WIDTH - 164, 64);
+        hudFont.draw(hud, "Power: " + Float.toString(power1), Gdx.graphics.getWidth() - 164, 64);
+        hudFont.draw(hud, "Battery Lfe: " + Float.toString(10 - getPlayer().getPower()), Gdx.graphics.getWidth()/2 - 32, Gdx.graphics.getHeight());
         hud.end();
 
         calcPower(delta);
         addEnemy(delta);
+        addEnemyHeavy(delta);
+        allyCoolDown += delta;
     }
 
     @Override
@@ -110,8 +127,8 @@ public class GameScreen extends AbstractScreen {
         power1 += delta * POWER_RATE;
         power2 += delta * POWER_RATE;
 
-        if (power1 < 0) game.setScreen(new EndScreen("GAME OVER, LOSER", game));
-        if (power2 < 0) game.setScreen(new EndScreen("YOUR PRIDE WILL BE YOUR DOWNFALL", game));
+        //if (power1 < 0) game.setScreen(new EndScreen("GAME OVER, LOSER", game));
+        //if (power2 < 0) game.setScreen(new EndScreen("YOUR PRIDE WILL BE YOUR DOWNFALL", game));
     }
 
     public Player getPlayer(){
@@ -119,8 +136,10 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void addPlayer(){
-        player = new Player((int)stage.getWidth() - (Sprite.BASE.width / 2) - 212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game);
-        midground.addActor(player);
+        if(power1 > 25){
+            player = new Player((int)stage.getWidth() - (Sprite.BASE.width / 2) - 212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game);
+            midground.addActor(player);
+        }
     }
 
     public void addEnemy(float delta){
@@ -131,6 +150,33 @@ public class GameScreen extends AbstractScreen {
         else
         coolDownTime += delta;
     }
+    
+    public void addEnemyHeavy(float delta){
+        if(getEnemyHeavies().size() + getEnemies().size() < MAX_ENEMIES && rand.nextInt() % RESPAWN_CHANCE == 1 && enemyHeavyCoolDownTime > ENEMY_HEAVY_RESPAWN_TIME && power2 > 50){
+            enemyHeavyCoolDownTime = 0;
+            midground.addActor(new EnemyHeavy(Sprite.BASE.width / 2 + 212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
+        }
+        else
+        enemyHeavyCoolDownTime += delta;
+    }
+    
+    public void spawnAlly(float delta){
+        if(getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME && getPower1() > 25){
+            allyCoolDown = 0 ;
+            setPower1(getPower1() - 25);
+            midground.addActor(new Ally ((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Sprite.BASE.width / 2) -212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
+        }
+        else allyCoolDown += delta;
+    }
+    
+    public void spawnAllyHeavy(float delta){
+        if(getAllyHeavies().size() + getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  getPower1() > 50){
+            allyCoolDown = 0 ;
+            setPower1(getPower1() - 50);
+            midground.addActor(new AllyHeavy((int)((AbstractScreen) game.getScreen()).getStage().getWidth() - (Sprite.BASE.width / 2) -212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
+        }
+        else allyCoolDown += delta;
+    }
 
     public void removeEnemy(Enemy enemy){
         getEnemies().remove(enemy);
@@ -138,6 +184,14 @@ public class GameScreen extends AbstractScreen {
 
     public void removeAlly(Ally ally){
         getAllies().remove(ally);
+    }
+    
+    public void removeEnemyHeavy(EnemyHeavy enemyHeavy){
+        getEnemyHeavies().remove(enemyHeavy);
+    }
+
+    public void removeAllyHeavy(AllyHeavy allyHeavy){
+        getAllyHeavies().remove(allyHeavy);
     }
 
     public OrthographicCamera getCamera(){
@@ -183,7 +237,7 @@ public class GameScreen extends AbstractScreen {
             stars.setX(x * Sprite.STARS.width);
             stars.setY(y * Sprite.STARS.height);
             starfield.addActor(stars);
-            if (rand.nextInt() % 8 == 1){
+            if (rand.nextInt() % 6 == 1){
                 Image bigStar = new Image(game.getSpriteHandler().getRegion(Sprite.STARS_ALT));
                 bigStar.setColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1F);
                 bigStar.setX(x * Sprite.STARS.width);
@@ -233,6 +287,14 @@ public class GameScreen extends AbstractScreen {
 
     public ArrayList getAllies(){
         return allyList;
+    }
+    
+    public ArrayList getEnemyHeavies(){
+        return enemyHeavyList;
+    }
+
+    public ArrayList getAllyHeavies(){
+        return allyHeavyList;
     }
 
 }

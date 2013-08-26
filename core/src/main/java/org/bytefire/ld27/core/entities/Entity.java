@@ -13,7 +13,7 @@ public abstract class Entity extends Image{
 
     protected static final float GRAVITATIONAL_ACCELERATION = 128F;
     protected static final float MAX_GRAVITY = 256F;
-    protected static final float IMMUNITY = 3;
+    protected static final float IMMUNITY = 2;
 
     protected final LD27 game;
     protected final Rectangle bound;

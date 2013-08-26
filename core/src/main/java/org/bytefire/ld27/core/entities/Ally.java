@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import static java.lang.Math.atan;
 import static java.lang.Math.toDegrees;
+import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
 import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
@@ -24,6 +25,8 @@ public class Ally extends Entity{
     private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
+    
+    Random random;
     
     private float lastAngle;
     private float power;
@@ -42,6 +45,8 @@ public class Ally extends Entity{
         setTouchable(Touchable.enabled);
 
         setRotation(r);
+        
+        random = new Random();
 
         angle = new Vector2(r, 0);
         
@@ -106,12 +111,12 @@ public class Ally extends Entity{
     public void calcAngle(float delta){
         Entity target = findClosest();
         if(target != null && target.position.dst(position) <= Gdx.graphics.getWidth()/2) {
-            long angleModifier = (System.nanoTime() % 18) - 6;
+            long angleModifier = (random.nextInt() % 18) - 6;
             float mAngle = (float) toDegrees(atan((position.y - target.position.y) / (position.x - target.position.x)));
             //GDX angles have 0 up, not right
             if (target.position.x - position.x > 0) mAngle += 360 - 90 + angleModifier;
             else mAngle += 180 - 90 + angleModifier;
-            lastAngle = mAngle;
+            shoot(delta, mAngle);
         }
     }
 
@@ -128,7 +133,10 @@ public class Ally extends Entity{
     @Override
     public boolean remove(){
         if (getLife() > IMMUNITY) {
-            if (screen != null) screen.removeAlly(this);
+            if (screen != null) {
+                screen.removeAlly(this);
+                ((AbstractScreen) game.getScreen()).getStage().addActor(new Head((int) (position.x + origin.x), (int) (position.y + origin.y), true, game));
+            }
             return super.remove();
         }
         else return false;

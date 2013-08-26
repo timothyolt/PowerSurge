@@ -25,9 +25,9 @@ public class Ally extends Entity{
     private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
-    
+
     Random random;
-    
+
     private float lastAngle;
     private float power;
     private float shotDelta;
@@ -45,14 +45,15 @@ public class Ally extends Entity{
         setTouchable(Touchable.enabled);
 
         setRotation(r);
-        
+
         random = new Random();
 
         angle = new Vector2(r, 0);
-        
+
         lastAngle = 90;
         power = 0;
         shotDelta = 0;
+        health = 3;
 
         //game.getAudioHandler().play(Sfx.SHOOT);
         if (screen != null) screen.getAllies().add(this);
@@ -60,11 +61,11 @@ public class Ally extends Entity{
 
     @Override
     public void act(float delta){
-        
+
         seek(delta);
         calcAngle(delta);
         calcPower(delta);
-        
+
         if (velocity.x < 0 && !flipped){
             tex.flip(true, false);
             setDrawable(new TextureRegionDrawable(tex));
@@ -78,10 +79,10 @@ public class Ally extends Entity{
 
         shotDelta += delta;
         power += delta;
-        
+
         super.act(delta);
     }
-    
+
     @Override
     public void draw(SpriteBatch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
@@ -154,7 +155,7 @@ public class Ally extends Entity{
         }
         return finalTarget;
     }
-    
+
     public void calcPower(float delta){
         if(power > 20) remove();
         else power += delta/2;

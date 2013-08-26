@@ -13,6 +13,7 @@ import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Sprite;
 import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
+import org.bytefire.ld27.core.entities.Shot.BulletFrom;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 
 import org.bytefire.ld27.core.screen.GameScreen;
@@ -25,9 +26,9 @@ public class AllyHeavy extends Entity{
     private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
-    
+
     Random random;
-    
+
     private float lastAngle;
     private float power;
     private float shotDelta;
@@ -45,14 +46,15 @@ public class AllyHeavy extends Entity{
         setTouchable(Touchable.enabled);
 
         setRotation(r);
-        
+
         random = new Random();
 
         angle = new Vector2(r, 0);
-        
+
         lastAngle = 90;
         power = 0;
         shotDelta = 0;
+        health = 4;
 
         //game.getSfxHandler().play(Sfx.SHOOT);
         if (screen != null) screen.getAllyHeavies().add(this);
@@ -60,11 +62,11 @@ public class AllyHeavy extends Entity{
 
     @Override
     public void act(float delta){
-        
+
         seek(delta);
         calcAngle(delta);
         calcPower(delta);
-        
+
         if (velocity.x < 0 && !flipped){
             tex.flip(true, false);
             setDrawable(new TextureRegionDrawable(tex));
@@ -78,10 +80,10 @@ public class AllyHeavy extends Entity{
 
         shotDelta += delta;
         power += delta;
-        
+
         super.act(delta);
     }
-    
+
     @Override
     public void draw(SpriteBatch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
@@ -125,7 +127,7 @@ public class AllyHeavy extends Entity{
         if (shotDelta > FIRE_RATE) {
             lastAngle = angle;
             screen.midground.addActor(new HeavyShot(
-                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, HeavyShot.BulletFrom.ALLY_HEAVY,
+                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, BulletFrom.ALLY,
                 game));
             shotDelta = 0;
         }
@@ -155,7 +157,7 @@ public class AllyHeavy extends Entity{
         }
         return finalTarget;
     }
-    
+
     public void calcPower(float delta){
         if(power > 35) remove();
         else power += delta/2;

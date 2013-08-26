@@ -37,7 +37,6 @@ public class Player extends Entity {
     private float flyDelta;
     private boolean flyLooping;
     private boolean flipped;
-    private int health;
 
     public Player(int x, int y, int r, LD27 game){
         super(x, y, game.getSpriteHandler().getRegion(Sprite.PLAYER), new Rectangle(23, 0, 17, 28), game);
@@ -55,7 +54,7 @@ public class Player extends Entity {
         flyDelta = 0;
         flyLooping = false;
         flipped = false;
-        health = 2;
+        health = 3;
     }
 
     @Override

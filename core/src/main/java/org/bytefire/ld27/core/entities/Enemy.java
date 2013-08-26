@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import static java.lang.Math.atan;
 import static java.lang.Math.toDegrees;
+import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
 import org.bytefire.ld27.core.screen.AbstractScreen;
@@ -91,7 +92,7 @@ public class Enemy extends Entity{
         }
         else velocity.x = MAX_VELOCITY;
         
-        if(position.x > ((AbstractScreen) game.getScreen()).getStage().getWidth() - Tex.BASE.width -32) {
+        if(position.x > ((AbstractScreen) game.getScreen()).getStage().getWidth() - Tex.BASE.width -212) {
             velocity.x = 0;
             shoot(delta, 270);
         }

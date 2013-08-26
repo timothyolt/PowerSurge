@@ -31,6 +31,7 @@ public class Player extends Entity {
     private final Vector2 angle;
     private final TextureRegion tex;
     
+    private float power;
     private float allyCoolDown;
     private float shotDelta;
     private boolean flipped;
@@ -47,6 +48,7 @@ public class Player extends Entity {
 
         angle = new Vector2(r, 0);
 
+        power = 0;
         allyCoolDown = 0;
         shotDelta = 0;
         flipped = false;
@@ -57,6 +59,7 @@ public class Player extends Entity {
 
         calcVelocity(delta);
         calcAngle(delta);
+        calcPower(delta);
 
         float gravity = velocity.y - GRAVITATIONAL_ACCELERATION;
         if (gravity >= -MAX_GRAVITY) velocity.y = gravity;
@@ -93,6 +96,7 @@ public class Player extends Entity {
 
         if(Gdx.input.isKeyPressed(Z)) spawnAlly(delta);
 
+        power += delta / 2;
         allyCoolDown += delta;
         shotDelta += delta;
         life += delta;
@@ -186,7 +190,7 @@ public class Player extends Entity {
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, true,
+                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, Shot.BulletFrom.PLAYER,
                 game));
             shotDelta = 0;
             if (game.getScreen() instanceof GameScreen){
@@ -204,5 +208,20 @@ public class Player extends Entity {
         }
         else allyCoolDown += delta;
     }
-
+    
+    public void calcPower(float delta){
+        if(power > 10) {
+            remove();
+            ((GameScreen) game.getScreen()).newPlayer();
+        }
+        else power += delta/2;
+    }
+    
+    public float getPower(){
+        return power;
+    }
+    
+    public void setPower(float newPower){
+        power = newPower;
+    }
 }

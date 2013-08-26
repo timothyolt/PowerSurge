@@ -1,6 +1,7 @@
 package org.bytefire.ld27.core.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -24,6 +25,8 @@ public class Ally extends Entity{
     private final Vector2 angle;
     private final TextureRegion tex;
     
+    private float lastAngle;
+    private float power;
     private float shotDelta;
     private boolean flipped;
 
@@ -45,6 +48,8 @@ public class Ally extends Entity{
 
         angle = new Vector2(r, 0);
         
+        lastAngle = 90;
+        power = 0;
         shotDelta = 0;
         
         //game.getSfxHandler().play(Sfx.SHOOT);
@@ -53,9 +58,10 @@ public class Ally extends Entity{
 
     @Override
     public void act(float delta){
-
+        
         seek(delta);
         calcAngle(delta);
+        calcPower(delta);
         
         if (velocity.x < 0 && !flipped){
             tex.flip(true, false);
@@ -69,8 +75,21 @@ public class Ally extends Entity{
         }
         
         shotDelta += delta;
+        power += delta;
         
         super.act(delta);
+    }
+    
+    @Override
+    public void draw(SpriteBatch batch, float parentAlpha){
+        super.draw(batch, parentAlpha);
+
+        batch.draw(game.getTextureHandler().getRegion(Tex.ARM),
+            getX() + 1, getY() - 3,     //Position
+            16, 16,                     //Origin
+            32, 32,                     //Width/Height
+            1, 1,                       //Scale
+            lastAngle);         //Rotation
     }
 
     public void seek(float delta){
@@ -95,14 +114,15 @@ public class Ally extends Entity{
             //GDX angles have 0 up, not right
             if (target.position.x - position.x > 0) mAngle += 360 - 90 + angleModifier;
             else mAngle += 180 - 90 + angleModifier;
-            shoot(delta, mAngle);
+            lastAngle = mAngle;
         }
     }
     
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
+            lastAngle = angle;
             ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, true,
+                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, Shot.BulletFrom.ALLY,
                 game));
             shotDelta = 0;
         }
@@ -128,5 +148,10 @@ public class Ally extends Entity{
             }
         }
         return finalTarget;
+    }
+    
+    public void calcPower(float delta){
+        if(power > 20) remove();
+        else power += delta/2;
     }
 }

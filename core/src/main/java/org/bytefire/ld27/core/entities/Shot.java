@@ -18,10 +18,12 @@ public class Shot extends Entity {
     
     private float lifeDelta;
 
-    private final Vector2 angle;
-    private final boolean teamPlayer;
+    enum BulletFrom{ PLAYER, ALLY, ENEMY};
+    BulletFrom bulletFrom = null;
     
-    public Shot(int x, int y, int r, boolean teamPlayer, LD27 game){
+    private final Vector2 angle;
+    
+    public Shot(int x, int y, int r, BulletFrom bulletFrom, LD27 game){
         super(x, y, game.getTextureHandler().getRegion(Tex.SHOT), game);
 
         setTouchable(Touchable.disabled);
@@ -32,7 +34,7 @@ public class Shot extends Entity {
 
         velocity.set((float) cos(toRadians(r + 90)) * MAX_VELOCITY, (float) sin(toRadians(r + 90)) * MAX_VELOCITY);
         angle = new Vector2(r, 0);
-        this.teamPlayer = teamPlayer;
+        this.bulletFrom = bulletFrom;
         
         game.getSfxHandler().play(Sfx.SHOOT);
     }
@@ -54,22 +56,27 @@ public class Shot extends Entity {
         setY(position.y);
 
         Actor hit = ((AbstractScreen)game.getScreen()).getStage().hit(getX(), getY(), true);
-        if (hit != null && hit instanceof Enemy && teamPlayer == true){
+        if (hit != null && hit instanceof Enemy && bulletFrom == BulletFrom.PLAYER){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
             remove();
+            ((GameScreen)game.getScreen()).getPlayer().setPower(((GameScreen)game.getScreen()).getPlayer().getPower() - 1);
         }
-        else if (hit != null && hit instanceof Base && ((Base) hit).getPlayerSide() != teamPlayer){
-            ((Base) hit).takeDamage(5);
-            remove();
+        else if (hit != null && hit instanceof Base){
+            if ((((Base) hit).getPlayerSide() == false && (bulletFrom == BulletFrom.PLAYER  || bulletFrom == BulletFrom.ALLY)) ||
+                 ((Base) hit).getPlayerSide() == true && bulletFrom == BulletFrom.ENEMY){
+                
+                ((Base) hit).takeDamage(5);
+                remove();
+            }
         }
-        else if (hit != null && hit instanceof Player && teamPlayer == false){
+        else if (hit != null && hit instanceof Player && bulletFrom == BulletFrom.ENEMY){
             if (((Entity) hit).getLife() > IMMUNITY){
                 hit.remove();
                 ((GameScreen)game.getScreen()).newPlayer(); 
             }
             remove();
         }
-        else if (hit != null && hit instanceof Ally && teamPlayer == false){
+        else if (hit != null && hit instanceof Ally && bulletFrom == BulletFrom.ENEMY){
             if (((Entity) hit).getLife() > IMMUNITY) hit.remove();
             remove();
         }

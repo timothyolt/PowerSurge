@@ -25,12 +25,12 @@ public class Player extends Entity {
     private static final float ANGUALR_POWER = 10F;
     private static final float FIRE_RATE = 0.5F;
     private static final float ALLY_SPAWN_TIME = 5;
-    
+
     private static final int MAX_ALLIES = 4;
 
     private final Vector2 angle;
     private final TextureRegion tex;
-    
+
     private float allyCoolDown;
     private float shotDelta;
     private boolean flipped;
@@ -96,7 +96,7 @@ public class Player extends Entity {
         allyCoolDown += delta;
         shotDelta += delta;
         life += delta;
-        
+
     }
 
     @Override
@@ -126,6 +126,7 @@ public class Player extends Entity {
 
     public float getAngleToMouse(){
         Vector2 mouse = ((AbstractScreen) game.getScreen()).getStage().screenToStageCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+        mouse.add(0, -16);
         float mAngle = (float) toDegrees(atan((mouse.y - position.y) / (mouse.x - position.x)));
         //GDX angles have 0 up, not right
         if (mouse.x - position.x > 0) mAngle += 360 - 90;
@@ -186,7 +187,7 @@ public class Player extends Entity {
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(
-                (int) (position.x + origin.x), (int) (position.y + origin.y), (int) angle, true,
+                (int) (position.x + origin.x), (int) (position.y + 10), (int) angle, true,
                 game));
             shotDelta = 0;
             if (game.getScreen() instanceof GameScreen){
@@ -195,7 +196,7 @@ public class Player extends Entity {
             }
         }
     }
-    
+
     public void spawnAlly(float delta){
         if(((GameScreen) game.getScreen()).getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  ((GameScreen)game.getScreen()).getPower1() >25){
             allyCoolDown = 0 ;

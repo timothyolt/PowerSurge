@@ -5,12 +5,12 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class TextureHandler {
+public class SpriteHandler {
 
     private Texture texture;
     private String ref;
 
-    public TextureHandler(){
+    public SpriteHandler(){
         texture = null;
         ref = null;
     }
@@ -34,7 +34,7 @@ public class TextureHandler {
         return new TextureRegion(texture, (id % gridWidth) * width, (id / gridHeight) * height, width, height);
     }
 
-    public TextureRegion getRegion(Tex tex){
+    public TextureRegion getRegion(Sprite tex){
         if (!tex.file.path().equals(ref)) load(tex.file);
         return getRegion(tex.width, tex.height, tex.id);
     }
@@ -48,7 +48,7 @@ public class TextureHandler {
         return getTexture();
     }
 
-    public Texture getTexture(Tex tex){
+    public Texture getTexture(Sprite tex){
         if (!tex.file.path().equals(ref)) load(tex.file);
         return texture;
     }

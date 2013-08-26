@@ -3,7 +3,7 @@ package org.bytefire.ld27.core.asset;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
-public enum Tex {
+public enum Sprite {
 
     SPLASH(Gdx.files.internal("studio.png"), 0, 0, 0),
     PLAYER(Gdx.files.internal("level.png"), 32, 32, 64),
@@ -21,7 +21,7 @@ public enum Tex {
     public final int height;
     public final int id;
 
-    private Tex(FileHandle file, int width, int height, int id){
+    private Sprite(FileHandle file, int width, int height, int id){
         this.file = file;
         this.width = width;
         this.height = height;

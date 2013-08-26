@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import org.bytefire.ld27.core.LD27;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.asset.Sprite;
 
 public class SplashScreen extends AbstractScreen {
 
@@ -29,7 +29,7 @@ public class SplashScreen extends AbstractScreen {
 
         //casted calculations to int to use the correct constructor
 
-        Image splash = new Image(new TextureRegion(game.getTextureHandler().getTexture(Tex.SPLASH), 0, (int) (1500 - ratioRegion), 3200, (int) (1500 + ratioRegion)));
+        Image splash = new Image(new TextureRegion(game.getSpriteHandler().getTexture(Sprite.SPLASH), 0, (int) (1500 - ratioRegion), 3200, (int) (1500 + ratioRegion)));
 
         //Set image to alpha, then fade in and out
         splash.getColor().a = 0F;

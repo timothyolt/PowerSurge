@@ -11,7 +11,7 @@ import static java.lang.Math.atan;
 import static java.lang.Math.toDegrees;
 import java.util.Random;
 import org.bytefire.ld27.core.LD27;
-import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.asset.Sprite;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 
 import org.bytefire.ld27.core.screen.GameScreen;
@@ -33,8 +33,8 @@ public class Enemy extends Entity{
     private boolean flipped;
 
     public Enemy(int x, int y, int r, LD27 game){
-        super(x, y, game.getTextureHandler().getRegion(Tex.ENEMY), new Rectangle(23, 0, 17, 28), game);
-        tex = game.getTextureHandler().getRegion(Tex.ENEMY);
+        super(x, y, game.getSpriteHandler().getRegion(Sprite.ENEMY), new Rectangle(23, 0, 17, 28), game);
+        tex = game.getSpriteHandler().getRegion(Sprite.ENEMY);
 
         if(game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
         else screen = null;
@@ -54,7 +54,7 @@ public class Enemy extends Entity{
         power = 0;
         shotDelta = 0;
 
-        //game.getSfxHandler().play(Sfx.SHOOT);
+        //game.getAudioHandler().play(Sfx.SHOOT);
         if (screen != null) screen.getEnemies().add(this);
 
     }
@@ -97,7 +97,7 @@ public class Enemy extends Entity{
         }
         else velocity.x = MAX_VELOCITY;
 
-        if(position.x > ((AbstractScreen) game.getScreen()).getStage().getWidth() - Tex.BASE.width -212) {
+        if(position.x > ((AbstractScreen) game.getScreen()).getStage().getWidth() - Sprite.BASE.width -212) {
             velocity.x = 0;
             shoot(delta, 270);
         }
@@ -107,7 +107,7 @@ public class Enemy extends Entity{
     public void draw(SpriteBatch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
 
-        batch.draw(game.getTextureHandler().getRegion(Tex.ARM),
+        batch.draw(game.getSpriteHandler().getRegion(Sprite.ARM),
             getX() + 1, getY() - 3,     //Position
             16, 16,                     //Origin
             32, 32,                     //Width/Height

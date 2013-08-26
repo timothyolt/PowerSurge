@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import static java.lang.Math.atan;
 import static java.lang.Math.toDegrees;
 import org.bytefire.ld27.core.LD27;
-import org.bytefire.ld27.core.asset.Tex;
+import org.bytefire.ld27.core.asset.Sprite;
 import static org.bytefire.ld27.core.entities.Entity.IMMUNITY;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 
@@ -31,8 +31,8 @@ public class Ally extends Entity{
     private boolean flipped;
 
     public Ally(int x, int y, int r, LD27 game){
-        super(x, y, game.getTextureHandler().getRegion(Tex.PLAYER), new Rectangle(23, 0, 17, 28), game);
-        tex = game.getTextureHandler().getRegion(Tex.PLAYER);
+        super(x, y, game.getSpriteHandler().getRegion(Sprite.PLAYER), new Rectangle(23, 0, 17, 28), game);
+        tex = game.getSpriteHandler().getRegion(Sprite.PLAYER);
 
         if(game.getScreen() instanceof GameScreen) screen = (GameScreen) game.getScreen();
         else screen = null;
@@ -49,7 +49,7 @@ public class Ally extends Entity{
         power = 0;
         shotDelta = 0;
 
-        //game.getSfxHandler().play(Sfx.SHOOT);
+        //game.getAudioHandler().play(Sfx.SHOOT);
         if (screen != null) screen.getAllies().add(this);
     }
 
@@ -81,7 +81,7 @@ public class Ally extends Entity{
     public void draw(SpriteBatch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
 
-        batch.draw(game.getTextureHandler().getRegion(Tex.ARM),
+        batch.draw(game.getSpriteHandler().getRegion(Sprite.ARM),
             getX() + 1, getY() - 3,     //Position
             16, 16,                     //Origin
             32, 32,                     //Width/Height
@@ -97,7 +97,7 @@ public class Ally extends Entity{
             velocity.y = (float) (((target.getY() - getY()) / dist) * MAX_VELOCITY);
         }
         else velocity.x = -MAX_VELOCITY;
-        if(position.x < Tex.BASE.width + 212) {
+        if(position.x < Sprite.BASE.width + 212) {
             velocity.x = 0;
             shoot(delta, 90);
         }

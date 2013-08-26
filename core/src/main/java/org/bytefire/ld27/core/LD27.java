@@ -1,9 +1,9 @@
 package org.bytefire.ld27.core;
 
-import org.bytefire.ld27.core.asset.TextureHandler;
+import org.bytefire.ld27.core.asset.SpriteHandler;
 import org.bytefire.ld27.core.screen.SplashScreen;
 import com.badlogic.gdx.Game;
-import org.bytefire.ld27.core.asset.SfxHandler;
+import org.bytefire.ld27.core.asset.AudioHandler;
 import org.bytefire.ld27.core.screen.AbstractScreen;
 import org.bytefire.ld27.core.screen.GameScreen;
 
@@ -11,13 +11,13 @@ public class LD27 extends Game {
 
     private static final boolean DEV_MODE = true;
 
-    private final TextureHandler texture;
-    private final SfxHandler sfx;
+    private final SpriteHandler texture;
+    private final AudioHandler sfx;
 
     public LD27(){
         super();
-        texture = new TextureHandler();
-        sfx = new SfxHandler();
+        texture = new SpriteHandler();
+        sfx = new AudioHandler();
     }
 
     public AbstractScreen getSplashScreen(){
@@ -25,11 +25,11 @@ public class LD27 extends Game {
         else return new SplashScreen(this);
     }
 
-    public TextureHandler getTextureHandler(){
+    public SpriteHandler getSpriteHandler(){
         return texture;
     }
 
-    public SfxHandler getSfxHandler(){
+    public AudioHandler getAudioHandler(){
         return sfx;
     }
 

@@ -4,27 +4,31 @@ import org.bytefire.ld27.core.asset.TextureHandler;
 import org.bytefire.ld27.core.screen.SplashScreen;
 import com.badlogic.gdx.Game;
 import org.bytefire.ld27.core.asset.SfxHandler;
+import org.bytefire.ld27.core.screen.AbstractScreen;
+import org.bytefire.ld27.core.screen.GameScreen;
 
 public class LD27 extends Game {
-    float elapsed;
-    
+
+    private static final boolean DEV_MODE = true;
+
     private final TextureHandler texture;
     private final SfxHandler sfx;
-    
+
     public LD27(){
         super();
         texture = new TextureHandler();
         sfx = new SfxHandler();
     }
 
-    public SplashScreen getSplashScreen(){
-        return new SplashScreen(this);
+    public AbstractScreen getSplashScreen(){
+        if (DEV_MODE) return new GameScreen(this);
+        else return new SplashScreen(this);
     }
-    
+
     public TextureHandler getTextureHandler(){
         return texture;
     }
-    
+
     public SfxHandler getSfxHandler(){
         return sfx;
     }

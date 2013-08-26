@@ -26,18 +26,18 @@ public class SplashScreen extends AbstractScreen {
         drawWidth = (int) stage.getWidth();
         drawHeight = (int) stage.getHeight();
         float ratioRegion = ((float) drawHeight / (float) drawWidth) * 1600;
-        
+
         //casted calculations to int to use the correct constructor
-        
+
         Image splash = new Image(new TextureRegion(game.getTextureHandler().getTexture(Tex.SPLASH), 0, (int) (1500 - ratioRegion), 3200, (int) (1500 + ratioRegion)));
-        
+
         //Set image to alpha, then fade in and out
         splash.getColor().a = 0F;
         SequenceAction actions = Actions.sequence(fadeIn(0.25F), delay(2F), fadeOut(0.25F),
             new Action() {
                 @Override
                 public boolean act(float delta){
-                    game.setScreen(new GameScreen(game));
+                    game.setScreen(new IntroScreen(game));
                     return true;
                 }
             });

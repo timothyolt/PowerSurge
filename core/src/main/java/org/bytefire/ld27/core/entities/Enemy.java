@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import static java.lang.Math.atan;
 import static java.lang.Math.toDegrees;
-import java.util.Random;
 import org.bytefire.ld27.core.LD27;
 import org.bytefire.ld27.core.asset.Tex;
 import org.bytefire.ld27.core.screen.AbstractScreen;
@@ -25,7 +24,7 @@ public class Enemy extends Entity{
     private final GameScreen screen;
     private final Vector2 angle;
     private final TextureRegion tex;
-    
+
     private float shotDelta;
     private boolean flipped;
 
@@ -48,9 +47,9 @@ public class Enemy extends Entity{
         setRotation(r);
 
         angle = new Vector2(r, 0);
-        
+
         shotDelta = 0;
-        
+
         //game.getSfxHandler().play(Sfx.SHOOT);
         ((GameScreen)game.getScreen()).getEnemies().add(this);
         
@@ -61,7 +60,7 @@ public class Enemy extends Entity{
 
         seek(delta);
         calcAngle(delta);
-        
+
         if (velocity.x < 0 && !flipped){
             tex.flip(true, false);
             setDrawable(new TextureRegionDrawable(tex));
@@ -72,7 +71,7 @@ public class Enemy extends Entity{
             setDrawable(new TextureRegionDrawable(tex));
             flipped = false;
         }
-        
+
         shotDelta += delta;
         
         super.act(delta);
@@ -97,7 +96,7 @@ public class Enemy extends Entity{
             shoot(delta, 270);
         }
     }
-    
+
     public void calcAngle(float delta){
         Entity target = findClosest();
         if(target == null) target = screen.getPlayer();
@@ -110,7 +109,7 @@ public class Enemy extends Entity{
             shoot(delta, mAngle);
         }
     }
-    
+
     public void shoot(float delta, float angle){
         if (shotDelta > FIRE_RATE) {
             ((AbstractScreen) game.getScreen()).getStage().addActor(new Shot(

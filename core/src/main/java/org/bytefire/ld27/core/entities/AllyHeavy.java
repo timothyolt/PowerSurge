@@ -114,7 +114,7 @@ public class AllyHeavy extends Entity{
         Entity target = findClosest();
         if(target != null && target.position.dst(position) <= Gdx.graphics.getWidth() * .75) {
             velocity.x /= 2;
-            long angleModifier = (random.nextInt() % 8) + 8;
+            long angleModifier = (random.nextInt() % 4) + 4;
             float mAngle = (float) toDegrees(atan((position.y - target.position.y) / (position.x - target.position.x)));
             //GDX angles have 0 up, not right
             if (target.position.x - position.x > 0) mAngle += 360 - 90 + angleModifier;

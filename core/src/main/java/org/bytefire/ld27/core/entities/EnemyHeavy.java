@@ -78,6 +78,12 @@ public class EnemyHeavy extends Entity{
             setDrawable(new TextureRegionDrawable(tex));
             flipped = false;
         }
+        
+//        if (position.x > 1 / 3 * screen.getStage().getWidth()) {
+//            velocity.x = 0;
+//            velocity.x = 0;
+//            shoot(delta, 270);
+//        }
 
         shotDelta += delta;
         power += delta;
@@ -182,9 +188,14 @@ public class EnemyHeavy extends Entity{
                 targetX = screen.getPlayer().getX();
                 finalTarget = screen.getPlayer();
             }
-
         }
-
+        if(screen != null) for(int i = 0; i < screen.getAllyHeavies().size(); i++){
+           AllyHeavy target = (AllyHeavy) screen.getAllyHeavies().get(i);
+            if(target.getX() > targetX){
+                targetX = target.getX();
+                finalTarget = target;
+            }
+        }
         return finalTarget;
     }
 

@@ -101,6 +101,11 @@ public class Enemy extends Entity{
             velocity.x = 0;
             shoot(delta, 270);
         }
+        
+//        if (position.x > 1 / 3 * screen.getStage().getWidth()) {
+//            velocity.x = 0;
+//            shoot(delta, 270);
+//        }
     }
 
     @Override
@@ -154,6 +159,13 @@ public class Enemy extends Entity{
                 finalTarget = screen.getPlayer();
             }
 
+        }
+        if(screen != null) for(int i = 0; i < screen.getAllyHeavies().size(); i++){
+            AllyHeavy target = (AllyHeavy) screen.getAllyHeavies().get(i);
+            if(target.getX() > targetX){
+                targetX = target.getX();
+                finalTarget = target;
+            }
         }
 
         return finalTarget;

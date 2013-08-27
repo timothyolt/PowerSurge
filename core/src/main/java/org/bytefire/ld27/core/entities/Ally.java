@@ -76,7 +76,7 @@ public class Ally extends Entity{
             setDrawable(new TextureRegionDrawable(tex));
             flipped = false;
         }
-
+        
         shotDelta += delta;
         power += delta;
 
@@ -148,6 +148,13 @@ public class Ally extends Entity{
         float targetX = 0;
         if(screen != null) for(int i = 0; i < screen.getEnemies().size(); i++){
             Enemy target = (Enemy) screen.getEnemies().get(i);
+            if(target.getX() > targetX){
+                targetX = target.getX();
+                finalTarget = target;
+            }
+        }
+        if(screen != null) for(int i = 0; i < screen.getEnemyHeavies().size(); i++){
+            EnemyHeavy target = (EnemyHeavy) screen.getEnemyHeavies().get(i);
             if(target.getX() > targetX){
                 targetX = target.getX();
                 finalTarget = target;

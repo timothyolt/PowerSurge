@@ -126,9 +126,17 @@ public abstract class Entity extends Image{
         return life;
     }
 
-    public void damage(float amount){
+    public boolean damage(float amount){
         health -= amount;
-        if (health <= 0) remove();
+        if (health <= 0) {
+            remove();
+            return true;
+        }
+        else return false;
+    }
+
+    public float getHealth(){
+        return health;
     }
 
 }

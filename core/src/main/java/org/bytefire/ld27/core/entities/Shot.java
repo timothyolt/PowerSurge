@@ -77,8 +77,7 @@ public class Shot extends Entity {
         }
         else if (hit != null && hit instanceof Player && bulletFrom == BulletFrom.ENEMY){
             if (((Entity) hit).getLife() > IMMUNITY){
-                 ((Entity) hit).damage(DAMAGE);
-                 if (screen != null) screen.addPlayer();
+                 if (((Entity) hit).damage(DAMAGE)) screen.addPlayer();
             }
             game.getAudioHandler().play(Audio.HIT);
             remove();

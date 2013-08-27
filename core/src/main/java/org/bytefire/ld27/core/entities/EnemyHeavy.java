@@ -133,9 +133,12 @@ public class EnemyHeavy extends Entity{
             else mAngle += 180 - 90 + angleModifier;
             System.out.println(mAngle);
             if((mAngle > 260 && mAngle < 310) || (mAngle > 80 && mAngle < 130)) shoot(delta, mAngle);
-            else if(flipped) mAngle = 90;
+            else if(flipped){
+                outOfRange = true;
+                lastAngle = 90;
+            }
             else {
-                mAngle = 270;
+                lastAngle = 270;
                 outOfRange = true;
             }
         }

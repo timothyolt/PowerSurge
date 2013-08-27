@@ -31,8 +31,6 @@ public class Enemy extends Entity{
     private float power;
     private float shotDelta;
     private boolean flipped;
-    private float health;
-
     public Enemy(int x, int y, int r, LD27 game){
         super(x, y, game.getSpriteHandler().getRegion(Sprite.ENEMY), new Rectangle(23, 0, 17, 28), game);
         tex = game.getSpriteHandler().getRegion(Sprite.ENEMY);
@@ -115,11 +113,6 @@ public class Enemy extends Entity{
             32, 32,                     //Width/Height
             1, 1,                       //Scale
             lastAngle);         //Rotation
-    }
-
-    public void damage(float amount){
-        health -= amount;
-        if (health <= 0) remove();
     }
 
     public void calcAngle(float delta){

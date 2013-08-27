@@ -159,7 +159,7 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void addEnemyHeavy(float delta){
-        if(getEnemyHeavies().size() + getEnemies().size() < MAX_ENEMIES && rand.nextInt() % RESPAWN_CHANCE == 1 && enemyHeavyCoolDownTime > ENEMY_HEAVY_RESPAWN_TIME && power2 > 50){
+        if(getEnemyHeavies().size() + getEnemies().size() < MAX_ENEMIES && rand.nextInt() % (RESPAWN_CHANCE * 2) == 1 && enemyHeavyCoolDownTime > ENEMY_HEAVY_RESPAWN_TIME && power2 > 50){
             enemyHeavyCoolDownTime = 0;
             midground.addActor(new EnemyHeavy(Sprite.BASE.width / 2 + 212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
         }

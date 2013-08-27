@@ -26,7 +26,7 @@ public class Ally extends Entity{
     private final Vector2 angle;
     private final TextureRegion tex;
 
-    Random random;
+    private Random random;
 
     private float lastAngle;
     private float power;

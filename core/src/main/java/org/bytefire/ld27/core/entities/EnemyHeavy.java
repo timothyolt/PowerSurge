@@ -131,7 +131,6 @@ public class EnemyHeavy extends Entity{
             //GDX angles have 0 up, not right
             if (target.position.x - position.x > 0) mAngle += 360 - 90 + angleModifier;
             else mAngle += 180 - 90 + angleModifier;
-            System.out.println(mAngle);
             if((mAngle > 260 && mAngle < 310) || (mAngle > 80 && mAngle < 130)) shoot(delta, mAngle);
             else if(flipped){
                 outOfRange = true;

@@ -9,7 +9,7 @@ import org.bytefire.ld27.core.screen.GameScreen;
 
 public class LD27 extends Game {
 
-    private static final boolean DEV_MODE = true;
+    private static final boolean DEV_MODE = false;
 
     private final SpriteHandler texture;
     private final AudioHandler sfx;

@@ -16,6 +16,7 @@ import org.bytefire.ld27.core.entities.Ally;
 import org.bytefire.ld27.core.entities.AllyHeavy;
 import org.bytefire.ld27.core.entities.EnemyHeavy;
 import org.bytefire.ld27.core.entities.Base;
+import org.bytefire.ld27.core.entities.Defence;
 import org.bytefire.ld27.core.entities.Enemy;
 import org.bytefire.ld27.core.entities.Player;
 
@@ -115,6 +116,8 @@ public class GameScreen extends AbstractScreen {
         addBases();
         addEnemy(10);
         addPlayer();
+
+        //background.addActor(new Defence((int) ((stage.getWidth() * 2 / 3) - (Sprite.DEFENCE.width / 2)), Sprite.MOON.height, game));
 
         stage.addActor(background);
         stage.addActor(midground);

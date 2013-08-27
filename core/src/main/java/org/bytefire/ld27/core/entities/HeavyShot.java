@@ -41,7 +41,7 @@ public class HeavyShot extends Entity {
         angle = new Vector2(r, 0);
         this.bulletFrom = bulletFrom;
 
-        game.getAudioHandler().play(Audio.SHOOT);
+        game.getAudioHandler().play(Audio.HEAVY_SHOOT);
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.bytefire.ld27.core.LD27;
 
 public class IntroScreen extends AbstractScreen{
     private static final String text =
-        "Unit ID: " + Integer.toString((int) Math.random()) + "\n" +
+        "Unit ID: " + "LD27" + "\n" +
         "Unit Mission: Power Surge Enemy Base " + "\n" +
         "Battery Life: . . . " + "\n" +
         "10 seconds";

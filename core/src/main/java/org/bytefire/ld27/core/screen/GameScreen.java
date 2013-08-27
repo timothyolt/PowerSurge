@@ -16,6 +16,7 @@ import org.bytefire.ld27.core.entities.Ally;
 import org.bytefire.ld27.core.entities.AllyHeavy;
 import org.bytefire.ld27.core.entities.EnemyHeavy;
 import org.bytefire.ld27.core.entities.Base;
+import org.bytefire.ld27.core.entities.Defence;
 import org.bytefire.ld27.core.entities.Enemy;
 import org.bytefire.ld27.core.entities.Player;
 
@@ -116,6 +117,8 @@ public class GameScreen extends AbstractScreen {
         addEnemy(10);
         addPlayer();
 
+        //background.addActor(new Defence((int) ((stage.getWidth() * 2 / 3) - (Sprite.DEFENCE.width / 2)), Sprite.MOON.height, game));
+
         stage.addActor(background);
         stage.addActor(midground);
         stage.addActor(foreground);
@@ -156,7 +159,7 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void addEnemyHeavy(float delta){
-        if(getEnemyHeavies().size() + getEnemies().size() < MAX_ENEMIES && rand.nextInt() % RESPAWN_CHANCE == 1 && enemyHeavyCoolDownTime > ENEMY_HEAVY_RESPAWN_TIME && power2 > 50){
+        if(getEnemyHeavies().size() + getEnemies().size() < MAX_ENEMIES && rand.nextInt() % (RESPAWN_CHANCE * 2) == 1 && enemyHeavyCoolDownTime > ENEMY_HEAVY_RESPAWN_TIME && power2 > 50){
             enemyHeavyCoolDownTime = 0;
             midground.addActor(new EnemyHeavy(Sprite.BASE.width / 2 + 212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game));
         }

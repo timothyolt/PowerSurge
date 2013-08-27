@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 import org.bytefire.ld27.core.LD27;
@@ -45,7 +46,7 @@ public class GameScreen extends AbstractScreen {
     private ArrayList<Ally> allyList;
     private ArrayList<AllyHeavy> allyHeavyList;
     private ArrayList<EnemyHeavy> enemyHeavyList;
-    
+
     private float power1;
     private float power2;
     private Player player;
@@ -68,7 +69,7 @@ public class GameScreen extends AbstractScreen {
         power1 = 1000;
         power2 = 1000;
         hud = new SpriteBatch();
-        hudFont = new BitmapFont();
+        hudFont = new BitmapFont(Gdx.files.internal("hud.fnt"), false);
         coolDownTime = 0;
         allyCoolDown = 0;
         enemyHeavyCoolDownTime = 0;
@@ -83,11 +84,13 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void render(float delta){
         super.render(delta);
+
+        DecimalFormat decimal = new DecimalFormat("#.##");
+
         hud.begin();
-        hudFont.setColor(0.5F, 0.5F, 1F, 1F);
-        hudFont.draw(hud, "Power: " + Float.toString(power2), 64, 64);
-        hudFont.draw(hud, "Power: " + Float.toString(power1), Gdx.graphics.getWidth() - 164, 64);
-        hudFont.draw(hud, "Battery Lfe: " + Float.toString(10 - getPlayer().getPower()), Gdx.graphics.getWidth()/2 - 32, Gdx.graphics.getHeight());
+        hudFont.draw(hud, "Power: " + decimal.format(power2), 64, 64);
+        hudFont.draw(hud, "Power: " + decimal.format(power1), WINDOW_WIDTH - 224, 64);
+        hudFont.draw(hud, "Battery Life: " + decimal.format(10 - player.getPower()), WINDOW_WIDTH/2 - 96, WINDOW_HEIGHT - 16);
         hud.end();
 
         calcPower(delta);
@@ -140,6 +143,7 @@ public class GameScreen extends AbstractScreen {
             player = new Player((int)stage.getWidth() - (Sprite.BASE.width / 2) - 212, Sprite.MOON.height + Sprite.PLAYER.height, 0, game);
             midground.addActor(player);
         }
+        else game.setScreen(new EndScreen("YOU RAN OUT OF POWER \n Be thrifty with your power, it will corrupts", game));
     }
 
     public void addEnemy(float delta){
@@ -150,7 +154,7 @@ public class GameScreen extends AbstractScreen {
         else
         coolDownTime += delta;
     }
-    
+
     public void addEnemyHeavy(float delta){
         if(getEnemyHeavies().size() + getEnemies().size() < MAX_ENEMIES && rand.nextInt() % RESPAWN_CHANCE == 1 && enemyHeavyCoolDownTime > ENEMY_HEAVY_RESPAWN_TIME && power2 > 50){
             enemyHeavyCoolDownTime = 0;
@@ -159,7 +163,7 @@ public class GameScreen extends AbstractScreen {
         else
         enemyHeavyCoolDownTime += delta;
     }
-    
+
     public void spawnAlly(float delta){
         if(getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME && getPower1() > 25){
             allyCoolDown = 0 ;
@@ -168,7 +172,7 @@ public class GameScreen extends AbstractScreen {
         }
         else allyCoolDown += delta;
     }
-    
+
     public void spawnAllyHeavy(float delta){
         if(getAllyHeavies().size() + getAllies().size() < MAX_ALLIES && allyCoolDown > ALLY_SPAWN_TIME &&  getPower1() > 50){
             allyCoolDown = 0 ;
@@ -185,7 +189,7 @@ public class GameScreen extends AbstractScreen {
     public void removeAlly(Ally ally){
         getAllies().remove(ally);
     }
-    
+
     public void removeEnemyHeavy(EnemyHeavy enemyHeavy){
         getEnemyHeavies().remove(enemyHeavy);
     }
@@ -288,7 +292,7 @@ public class GameScreen extends AbstractScreen {
     public ArrayList getAllies(){
         return allyList;
     }
-    
+
     public ArrayList getEnemyHeavies(){
         return enemyHeavyList;
     }

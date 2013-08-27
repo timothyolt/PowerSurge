@@ -31,7 +31,6 @@ public class Enemy extends Entity{
     private float power;
     private float shotDelta;
     private boolean flipped;
-
     public Enemy(int x, int y, int r, LD27 game){
         super(x, y, game.getSpriteHandler().getRegion(Sprite.ENEMY), new Rectangle(23, 0, 17, 28), game);
         tex = game.getSpriteHandler().getRegion(Sprite.ENEMY);
@@ -53,6 +52,7 @@ public class Enemy extends Entity{
         lastAngle = 270;
         power = 0;
         shotDelta = 0;
+        health = 3;
 
         //game.getAudioHandler().play(Sfx.SHOOT);
         if (screen != null) screen.getEnemies().add(this);
@@ -79,7 +79,7 @@ public class Enemy extends Entity{
 
         shotDelta += delta;
         power += delta;
-        
+
         super.act(delta);
     }
 
@@ -102,7 +102,7 @@ public class Enemy extends Entity{
             shoot(delta, 270);
         }
     }
-    
+
     @Override
     public void draw(SpriteBatch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
@@ -119,7 +119,7 @@ public class Enemy extends Entity{
         Entity target = findClosest();
         if(target == null) target = screen.getPlayer();
         if(target.position.dst(position) <= Gdx.graphics.getWidth() * .6) {
-            long angleModifier = 0;
+            long angleModifier;
             if(position.y > 128) angleModifier = (random.nextInt() % 32) - 16;
             else angleModifier = (random.nextInt() % 18) - 6;
             float mAngle = (float) toDegrees(atan((position.y - target.position.y) / (position.x - target.position.x)));
@@ -170,7 +170,7 @@ public class Enemy extends Entity{
         }
         else return false;
     }
-    
+
     public void calcPower(float delta){
         if(power > 25) remove();
         else power += delta/2;

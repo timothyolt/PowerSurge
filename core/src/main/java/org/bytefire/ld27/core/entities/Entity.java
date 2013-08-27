@@ -22,6 +22,7 @@ public abstract class Entity extends Image{
     protected final Vector2 velocity;
 
     protected float life;
+    protected float health;
 
     public Entity(int x, int y, TextureRegion tex, Rectangle bound, LD27 game){
         super(tex);
@@ -37,6 +38,7 @@ public abstract class Entity extends Image{
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
         life = 0;
+        health = 1;
     }
 
     public Entity(int x, int y, TextureRegion tex, LD27 game){
@@ -122,6 +124,19 @@ public abstract class Entity extends Image{
 
     public float getLife(){
         return life;
+    }
+
+    public boolean damage(float amount){
+        health -= amount;
+        if (health <= 0) {
+            remove();
+            return true;
+        }
+        else return false;
+    }
+
+    public float getHealth(){
+        return health;
     }
 
 }
